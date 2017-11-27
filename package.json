@@ -1,0 +1,29 @@
+{
+  "name": "inferrer",
+  "version": "0.0.1",
+  "description": "A simple support vector machine library",
+  "main": "index.js",
+  "scripts": {
+    "test": "npm test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/CMoncur/inferrer.git"
+  },
+  "keywords": [
+    "support vector machine",
+    "lsvm",
+    "machine learning",
+    "machine",
+    "support vector",
+    "support",
+    "svm",
+    "vector",
+  ],
+  "author": "Cody Moncur",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/CMoncur/inferrer/issues"
+  },
+  "homepage": "https://github.com/CMoncur/inferrer#readme"
+}
