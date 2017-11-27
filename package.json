@@ -4,7 +4,7 @@
   "description": "A simple support vector machine library",
   "main": "index.js",
   "scripts": {
-    "test": "npm test"
+    "test": "npm test && ava"
   },
   "repository": {
     "type": "git",
@@ -25,5 +25,9 @@
   "bugs": {
     "url": "https://github.com/CMoncur/inferrer/issues"
   },
-  "homepage": "https://github.com/CMoncur/inferrer#readme"
+  "homepage": "https://github.com/CMoncur/inferrer#readme",
+  "devDependencies": {
+    "ava": "^0.23.0",
+    "eslint": "^4.12.0"
+  }
 }
