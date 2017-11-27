@@ -1,9 +1,13 @@
+const Defaults = require("../env/defaults")
+
 module.exports = class Svm {
-  constructor (opts = { sup: "sup yeah cool" }) {
-    this.sup = opts.sup
+  constructor (opts = {
+    yeah: Defaults.SVM_OPTIONS.yeah,
+  }) {
+    this.yeah = opts.yeah
   }
 
   cheer () {
-    console.log(this.sup)
+    console.log(this.yeah)
   }
 }
