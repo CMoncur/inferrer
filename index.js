@@ -1,3 +1,4 @@
+// Internal Dependencies
 const Svm = require("./src/svm")
 
 const datos = {
@@ -15,3 +16,7 @@ const datos = {
 }
 
 const yeah = new Svm
+
+console.log(datos)
+
+yeah.cheer()

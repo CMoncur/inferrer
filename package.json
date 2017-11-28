@@ -4,7 +4,7 @@
   "description": "A simple support vector machine library",
   "main": "index.js",
   "scripts": {
-    "test": "npm test && ava"
+    "test": "ava --verbose"
   },
   "repository": {
     "type": "git",
