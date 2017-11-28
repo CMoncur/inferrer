@@ -25,6 +25,18 @@ test("Magnitude expects two-item tuple of numbers", (t) => {
   t.throws(() => Util.magnitude([ 3, "hi" ]), TypeError)
 })
 
+// Vector Diff
+test("Vector Diff correctly calculates new vector", (t) => {
+  t.deepEqual(Util.vectorDiff([ 3, 4 ], [ 5, 6 ]), [ -2, -2 ])
+})
+
+test("Vector Diff expects two-item tuple of numbers", (t) => {
+  t.throws(() => Util.vectorDiff([ "hi", 4 ], [ 5, 6 ]), TypeError)
+  t.throws(() => Util.vectorDiff([ 3, "hi" ], [ 5, 6 ]), TypeError)
+  t.throws(() => Util.vectorDiff([ 3, 4 ], [ "hi", 6 ]), TypeError)
+  t.throws(() => Util.vectorDiff([ 3, 4 ], [ 5, "hi" ]), TypeError)
+})
+
 // Vector Sum
 test("Vector Sum correctly calculates new vector", (t) => {
   t.deepEqual(Util.vectorSum([ 3, 4 ], [ 5, 6 ]), [ 8, 10 ])
