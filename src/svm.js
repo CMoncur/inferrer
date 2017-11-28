@@ -10,4 +10,12 @@ module.exports = class Svm {
   cheer () {
     console.log(this.yeah)
   }
+
+  train () {
+    return null
+  }
+
+  predict () {
+    return null
+  }
 }

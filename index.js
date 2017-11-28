@@ -1,5 +1,17 @@
 const Svm = require("./src/svm")
 
-const yeah = new Svm
+const datos = {
+  positive: [
+    [ 1, 5 ],
+    [ 2, 3 ],
+    [ -3, 4 ]
+  ],
 
-yeah.cheer()
+  negative: [
+    [ 5, 2 ],
+    [ 4, -1 ],
+    [ 6, 1 ]
+  ],
+}
+
+const yeah = new Svm
