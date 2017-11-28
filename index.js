@@ -1,5 +1,6 @@
 // Internal Dependencies
-const Svm = require("./src/svm")
+const Util = require("./src/util")
+// TODO const Svm = require("./src/svm")
 
 const datos = {
   positive: [
@@ -15,8 +16,8 @@ const datos = {
   ],
 }
 
-const yeah = new Svm
+// TODO const yeah = new Svm
 
 console.log(datos)
 
-yeah.cheer()
+console.log(Util.direction([ 3, 4 ]))

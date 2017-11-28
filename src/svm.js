@@ -8,15 +8,11 @@ module.exports = class Svm {
     this.yeah = opts.yeah
   }
 
-  cheer () {
-    console.log(this.yeah)
-  }
-
   train () {
-    return null
+    return null // TODO
   }
 
   predict () {
-    return null
+    return null // TODO
   }
 }
