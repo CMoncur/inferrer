@@ -28,11 +28,11 @@ test("Dot product expects two-item tuple of numbers", (t) => {
 })
 
 // Magnitude
-test("Magnitude correctly calculates Pythagorean Theorem", (t) => {
+test("Magnitude correctly calculates Euclidean Norm", (t) => {
   t.deepEqual(Util.magnitude([ 3, 4 ]), 5)
 })
 
-test("Magnitude expects two-item tuple of numbers", (t) => {
+test("Magnitude expects a list of numbers", (t) => {
   t.throws(() => Util.magnitude([ "hi", 4 ]), TypeError)
   t.throws(() => Util.magnitude([ 3, "hi" ]), TypeError)
 })

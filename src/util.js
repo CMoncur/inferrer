@@ -40,16 +40,25 @@ function dotProduct ([ oa, ob ], [ ox, oy ]) {
   return ((oa * ox) + (ob * oy))
 }
 
-/* Given a vector from origin to (x,y), `ox` is the distance between origin
-** and x, and `oy` is distance between origin and y.
+/* A magnitude of a vector is also known as the vector's norm. Magnitude can
+** be solved using Euclidean Norm.
+** https://en.wikipedia.org/wiki/Norm_(mathematics)#Euclidean_norm
 */
-// magnitude :: [ Number, Number ] -> Number
-function magnitude ([ ox, oy ]) {
-  if (typeof(ox) !== "number" || typeof(oy) !== "number") {
-    throw new TypeError("Magnitude expects a two-item tuple of numbers")
+// magnitude :: [ Number ] -> Number
+function magnitude (vector) {
+  if (!Array.isArray(vector)) {
+    throw new TypeError("Magnitude expects an array of numbers")
   }
 
-  return Math.sqrt(Math.pow(ox, 2) + Math.pow(oy, 2))
+  return Math.sqrt(
+    vector.reduce((x, xs) => {
+      if (typeof(xs) !== "number") {
+        throw new TypeError("Magnitude expects an array of numbers")
+      }
+
+      return (Math.pow(xs, 2) + x)
+    }, 0)
+  )
 }
 
 /* Two vectors may be subtracted, resulting in a third vector which is the
