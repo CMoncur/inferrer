@@ -13,15 +13,22 @@ module.exports = {
 ** In the simplest terms, direction of a vector is equal to the cosine of
 ** it's angles
 */
-// direction :: [ Number, Number ] -> [ Number, Number ]
-function direction ([ ox, oy ]) {
-  if (typeof(ox) !== "number" || typeof(oy) !== "number") {
-    throw new TypeError("Direction expects a two-item tuple of numbers")
+// direction :: [ Number ] -> [ Number ]
+function direction (v) {
+  if (!Array.isArray(v)) {
+    throw new TypeError("Direction expects a list of numbers")
   }
 
-  const mag = magnitude([ ox, oy ])
+  const mag = magnitude(v)
 
-  return [ ox / mag, oy / mag ]
+  // return [ ox / mag, oy / mag ]
+  return v.map((xs) => {
+    if (typeof(xs) !== "number") {
+      throw new TypeError("Direction expects a list of numbers")
+    }
+
+    return xs / mag
+  })
 }
 
 /* Given two equal-sized lists of numbers, the dot product is defined as the
@@ -45,13 +52,13 @@ function dotProduct ([ oa, ob ], [ ox, oy ]) {
 ** https://en.wikipedia.org/wiki/Norm_(mathematics)#Euclidean_norm
 */
 // magnitude :: [ Number ] -> Number
-function magnitude (vector) {
-  if (!Array.isArray(vector)) {
+function magnitude (v) {
+  if (!Array.isArray(v)) {
     throw new TypeError("Magnitude expects an array of numbers")
   }
 
   return Math.sqrt(
-    vector.reduce((x, xs) => {
+    v.reduce((x, xs) => {
       if (typeof(xs) !== "number") {
         throw new TypeError("Magnitude expects an array of numbers")
       }

@@ -11,6 +11,7 @@ test("Direction correctly calculates cosine of angles", (t) => {
 })
 
 test("Direction expects two-item tuple of numbers", (t) => {
+  t.throws(() => Util.direction(4), TypeError)
   t.throws(() => Util.direction([ "hi", 4 ]), TypeError)
   t.throws(() => Util.direction([ 3, "hi" ]), TypeError)
 })
@@ -33,6 +34,7 @@ test("Magnitude correctly calculates Euclidean Norm", (t) => {
 })
 
 test("Magnitude expects a list of numbers", (t) => {
+  t.throws(() => Util.magnitude(4), TypeError)
   t.throws(() => Util.magnitude([ "hi", 4 ]), TypeError)
   t.throws(() => Util.magnitude([ 3, "hi" ]), TypeError)
 })
