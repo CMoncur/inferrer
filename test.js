@@ -15,6 +15,18 @@ test("Direction expects two-item tuple of numbers", (t) => {
   t.throws(() => Util.direction([ 3, "hi" ]), TypeError)
 })
 
+// Dot Product
+test("Dot product correctly calculates sum of product of given lists", (t) => {
+  t.deepEqual(Util.dotProduct([ 3, 4 ], [ 5, 6 ]), 39)
+})
+
+test("Dot product expects two-item tuple of numbers", (t) => {
+  t.throws(() => Util.dotProduct([ "hi", 4 ], [ 5, 6 ]), TypeError)
+  t.throws(() => Util.dotProduct([ 3, "hi" ], [ 5, 6 ]), TypeError)
+  t.throws(() => Util.dotProduct([ 3, 4 ], [ "hi", 6 ]), TypeError)
+  t.throws(() => Util.dotProduct([ 3, 4 ], [ 5, "hi" ]), TypeError)
+})
+
 // Magnitude
 test("Magnitude correctly calculates Pythagorean Theorem", (t) => {
   t.deepEqual(Util.magnitude([ 3, 4 ]), 5)

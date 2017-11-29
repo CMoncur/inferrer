@@ -1,5 +1,6 @@
 module.exports = {
   direction,
+  dotProduct,
   magnitude,
   vectorDiff,
   vectorSum,
@@ -21,6 +22,22 @@ function direction ([ ox, oy ]) {
   const mag = magnitude([ ox, oy ])
 
   return [ ox / mag, oy / mag ]
+}
+
+/* Given two equal-sized lists of numbers, the dot product is defined as the
+** sum of products of each of the list items.
+*/
+// dotProduct :: [ Number, Number ], [ Number, Number ] -> Number
+function dotProduct ([ oa, ob ], [ ox, oy ]) {
+  if (typeof(oa) !== "number"
+    || typeof(ob) !== "number"
+    || typeof(ox) !== "number"
+    || typeof(oy) !== "number"
+  ) {
+    throw new TypeError("Dot product expects a two-item tuple of numbers")
+  }
+
+  return ((oa * ox) + (ob * oy))
 }
 
 /* Given a vector from origin to (x,y), `ox` is the distance between origin
