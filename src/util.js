@@ -21,7 +21,6 @@ function direction (v) {
 
   const mag = magnitude(v)
 
-  // return [ ox / mag, oy / mag ]
   return v.map((x) => {
     if (typeof(x) !== "number") {
       throw new TypeError("Direction expects a list of numbers")
@@ -79,17 +78,19 @@ function magnitude (v) {
 /* Two vectors may be subtracted, resulting in a third vector which is the
 ** difference of the coordinates of the original two.
 */
-// vectorDiff :: [ Number, Number ], [ Number, Number ] -> [ Number, Number ]
-function vectorDiff ([ oa, ob ], [ ox, oy ]) {
-  if (typeof(oa) !== "number"
-    || typeof(ob) !== "number"
-    || typeof(ox) !== "number"
-    || typeof(oy) !== "number"
-  ) {
-    throw new TypeError("Vector Sum expects a two-item tuple of numbers")
+// vectorDiff :: [ Number ], [ Number ] -> [ Number ]
+function vectorDiff (v, w) {
+  if (v.length !== w.length) {
+    throw new TypeError("Vector Diff expects two equal-sized lists")
   }
 
-  return [ oa - ox, ob - oy ]
+  return v.map((x, idx) => {
+    if (typeof(x) !== "number" || typeof(w[idx]) !== "number") {
+      throw new TypeError("Vector Diff expects two arrays of numbers")
+    }
+
+    return x - w[idx]
+  })
 }
 
 /* Two vectors may be added together, resulting in a third vector which is
