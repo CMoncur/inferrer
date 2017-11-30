@@ -2,13 +2,13 @@ module.exports = {
   direction,
   dotProduct,
   magnitude,
+  sign,
   vectorDiff,
   vectorSum,
 }
 
 
-/* Given a vector from origin to (x,y), `ox` is the distance between origin
-** and x, and `oy` is distance between origin and y.
+/* Given a vector returns a vector that indicates the direction of the first.
 **
 ** In the simplest terms, direction of a vector is equal to the cosine of
 ** it's angles
@@ -73,6 +73,28 @@ function magnitude (v) {
       return (Math.pow(xs, 2) + x)
     }, 0)
   )
+}
+
+/* The sign of number x is 1 if x is greater than 0, -1 if x is less than 0,
+** and 0 if x is equal to 0.
+*/
+// sign :: Number -> Number
+function sign (x) {
+  if (typeof(x) !== "number") {
+    throw new TypeError("Sign expects a number")
+  }
+
+  if (x === 0) {
+    return 0
+  }
+
+  else if (x > 0) {
+    return 1
+  }
+
+  else if (x < 0) {
+    return -1
+  }
 }
 
 /* Two vectors may be subtracted, resulting in a third vector which is the

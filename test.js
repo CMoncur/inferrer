@@ -39,6 +39,17 @@ test("Magnitude expects a list of numbers", (t) => {
   t.throws(() => Util.magnitude([ 3, "hi" ]), TypeError)
 })
 
+// Sign
+test("Sign correctly classifies the sign of a number", (t) => {
+  t.deepEqual(Util.sign(0), 0)
+  t.deepEqual(Util.sign(5), 1)
+  t.deepEqual(Util.sign(-5), -1)
+})
+
+test("Sign expects a number", (t) => {
+  t.throws(() => Util.sign("hi"), TypeError)
+})
+
 // Vector Diff
 test("Vector Diff correctly calculates new vector", (t) => {
   t.deepEqual(Util.vectorDiff([ 3, 4 ], [ 5, 6 ]), [ -2, -2 ])
