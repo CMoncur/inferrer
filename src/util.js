@@ -96,15 +96,17 @@ function vectorDiff (v, w) {
 /* Two vectors may be added together, resulting in a third vector which is
 ** the sum of the coordinates of the original two.
 */
-// vectorSum :: [ Number, Number ], [ Number, Number ] -> [ Number, Number ]
-function vectorSum ([ oa, ob ], [ ox, oy ]) {
-  if (typeof(oa) !== "number"
-    || typeof(ob) !== "number"
-    || typeof(ox) !== "number"
-    || typeof(oy) !== "number"
-  ) {
-    throw new TypeError("Vector Sum expects a two-item tuple of numbers")
+// vectorSum :: [ Number ], [ Number ] -> [ Number ]
+function vectorSum (v, w) {
+  if (v.length !== w.length) {
+    throw new TypeError("Vector Sum expects two equal-sized lists")
   }
 
-  return [ oa + ox, ob + oy ]
+  return v.map((x, idx) => {
+    if (typeof(x) !== "number" || typeof(w[idx]) !== "number") {
+      throw new TypeError("Vector Sum expects two arrays of numbers")
+    }
+
+    return x + w[idx]
+  })
 }
