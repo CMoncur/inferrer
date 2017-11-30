@@ -1,6 +1,7 @@
 module.exports = {
   direction,
   dotProduct,
+  hypothesis,
   magnitude,
   sign,
   vectorDiff,
@@ -52,6 +53,20 @@ function dotProduct (v, w) {
   })
 
   return products.reduce((x, xs) => x + xs, 0)
+}
+
+/* Given vectors v and w, we define the equation of a hyperplane as
+** w . x + b = 0, which is similar to a rise over run equation, but using
+** n-dimensional vectors. Within this function, we assume v represents
+** our hyperplane, and w represents the input to classify.
+*/
+// hypothesis :: [ Number ], [ Number ], Number -> Number
+function hypothesis (v, w, b) {
+  if (!Array.isArray(v) || !Array.isArray(w) || typeof(b) !== "number") {
+    throw new TypeError("Hypothesis expects two arrays and a number")
+  }
+
+  return sign(dotProduct(v, w) + b)
 }
 
 /* A magnitude of a vector is also known as the vector's norm. Magnitude can

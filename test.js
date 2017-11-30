@@ -28,6 +28,18 @@ test("Dot product expects two-item tuple of numbers", (t) => {
   t.throws(() => Util.dotProduct([ 3, 4 ], [ 5, "hi" ]), TypeError)
 })
 
+// Hypothesis
+test("Hypothesis correctly classifies the input vector", (t) => {
+  t.deepEqual(Util.hypothesis([ 0.4, 1 ], [ 8, 7 ], -9), 1)
+  t.deepEqual(Util.hypothesis([ 0.4, 1 ], [ 1, 3 ], -9), -1)
+})
+
+test("Hypothesis expects two lists of numbers and a number", (t) => {
+  t.throws(() => Util.hypothesis("hi", [ 5, 6 ], 4), TypeError)
+  t.throws(() => Util.hypothesis([ 3, 4 ], "hi", 4), TypeError)
+  t.throws(() => Util.hypothesis([ 3, 4 ], [ 5, 6 ], "hi"), TypeError)
+})
+
 // Magnitude
 test("Magnitude correctly calculates Euclidean Norm", (t) => {
   t.deepEqual(Util.magnitude([ 3, 4 ]), 5)
