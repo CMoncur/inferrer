@@ -22,29 +22,37 @@ function direction (v) {
   const mag = magnitude(v)
 
   // return [ ox / mag, oy / mag ]
-  return v.map((xs) => {
-    if (typeof(xs) !== "number") {
+  return v.map((x) => {
+    if (typeof(x) !== "number") {
       throw new TypeError("Direction expects a list of numbers")
     }
 
-    return xs / mag
+    return x / mag
   })
 }
 
 /* Given two equal-sized lists of numbers, the dot product is defined as the
 ** sum of products of each of the list items.
 */
-// dotProduct :: [ Number, Number ], [ Number, Number ] -> Number
-function dotProduct ([ oa, ob ], [ ox, oy ]) {
-  if (typeof(oa) !== "number"
-    || typeof(ob) !== "number"
-    || typeof(ox) !== "number"
-    || typeof(oy) !== "number"
-  ) {
-    throw new TypeError("Dot product expects a two-item tuple of numbers")
+// dotProduct :: [ Number ], [ Number ] -> Number
+function dotProduct (v, w) {
+  if (v.length !== w.length) {
+    throw new TypeError("Dot Product expects two equal-sized lists")
   }
 
-  return ((oa * ox) + (ob * oy))
+  if (!Array.isArray(v) || !Array.isArray(w)) {
+    throw new TypeError("Dot Product expects two arrays of numbers")
+  }
+
+  const products = v.map((x, idx) => {
+    if (typeof(x) !== "number" || typeof(w[idx]) !== "number") {
+      throw new TypeError("Dot Product expects two arrays of numbers")
+    }
+
+    return x * w[idx]
+  })
+
+  return products.reduce((x, xs) => x + xs, 0)
 }
 
 /* A magnitude of a vector is also known as the vector's norm. Magnitude can
