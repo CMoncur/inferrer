@@ -66,7 +66,11 @@ function hypothesis (v, w, b) {
     throw new TypeError("Hypothesis expects two arrays and a number")
   }
 
-  return sign(dotProduct(v, w) + b)
+  // Prepends b to list v, prepends 1 to list w.
+  v.unshift(b)
+  w.unshift(1)
+
+  return sign(dotProduct(v, w))
 }
 
 /* A magnitude of a vector is also known as the vector's norm. Magnitude can
