@@ -1,6 +1,7 @@
 module.exports = {
   direction,
   dotProduct,
+  geometricMargin,
   hypothesis,
   magnitude,
   sign,
@@ -53,6 +54,22 @@ function dotProduct (v, w) {
   })
 
   return products.reduce((x, xs) => x + xs, 0)
+}
+
+/* The geometric margin is used to calculate the distance between a given
+** vector and a hyperplane. In this context, w represents our examples.
+*/
+// geometricMargin :: [ Number ], [ Number ], [ Number ], Number -> Number
+function geometricMargin (v, w, y, b) {
+  const exampleMargin = (w_i, y_i) => {
+    const vDir = direction(v)
+
+    return y_i * (dotProduct(vDir, w_i) + b / vDir)
+  }
+
+  return w
+    .map((w_i, idx) => exampleMargin(w_i, y[idx]))
+    .reduce((x, xs) => x > xs ? xs : x) // Return smallest value in array
 }
 
 /* Given vectors v and w, we define the equation of a hyperplane as
