@@ -12,7 +12,7 @@ const trainingData = {
   classification: [ -1, 1, 1, -1 ],
 }
 
-const XOR = new Svm({c: "hi"})
+const XOR = new Svm()
 
 XOR.train(trainingData)
 

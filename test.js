@@ -4,6 +4,7 @@ const test = require("ava")
 // Internal Dependencies
 const Formula = require("./src/formula")
 const Kernel = require("./src/kernel")
+const Svm = require("./src/svm")
 
 /* UTILITIES */
 // Direction
@@ -161,4 +162,35 @@ test("Linear kernel expects two-item tuple of numbers", (t) => {
   t.throws(() => Kernel.linear([ 3, "hi" ], [ 5, 6 ]), TypeError)
   t.throws(() => Kernel.linear([ 3, 4 ], [ "hi", 6 ]), TypeError)
   t.throws(() => Kernel.linear([ 3, 4 ], [ 5, "hi" ]), TypeError)
+})
+
+/* SVM CLASS */
+const XOR = new Svm()
+
+// Train
+test("Train expects properly sanitized training data", (t) => {
+  const notArrays = {
+    input: "hi",
+    classification: [ -1, 1, 1, -1 ],
+  }
+
+  const notEqualLength = {
+    input: [ [ 0, 0 ], [ 0, 1 ], [ 1, 0 ], [ 1, 1 ] ],
+    classification: [ -1, 1, 1, -1, 1 ],
+  }
+
+  const improperVectorSize = {
+    input: [ [ 0, 1, 0 ], [ 0, 1 ], [ 1, 0 ], [ 1, 1 ] ],
+    classification: [ -1, 1, 1, -1 ],
+  }
+
+  const notProperSign = {
+    input: [ [ 0, 0 ], [ 0, 1 ], [ 1, 0 ], [ 1, 1 ] ],
+    classification: [ -1, 1, 3, -1 ],
+  }
+
+  t.throws(() => XOR.train(notArrays), TypeError)
+  t.throws(() => XOR.train(notEqualLength), TypeError)
+  t.throws(() => XOR.train(improperVectorSize), TypeError)
+  t.throws(() => XOR.train(notProperSign), TypeError)
 })
