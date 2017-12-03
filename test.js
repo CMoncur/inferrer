@@ -71,6 +71,25 @@ test("Geometric Margin selects the largest margin of two hyperplanes", (t) => {
   t.truthy(largerMargin > smallerMargin)
 })
 
+test("Geometric Margin expects three lists and a number", (t) => {
+  // Good values
+  const vGood = [ -0.5, -1 ]
+  const wGood = [ [ 3, 6 ], [ 9, 3 ], [ 5, 4 ], [ 1, 8 ], [ 6, 6 ], [ 9, 5 ] ]
+  const yGood = [ 1, 1, 1, -1, -1, -1 ]
+  const bGood = 8
+
+  // Bad Values
+  const vBad = [ -0.5, NaN ]
+  const wBad = [ [ 3, 6 ], [ 9, 3 ], [ "hi", 4 ], [ 1, 8 ], [ 6, 6 ], [ 9, 5 ] ]
+  const yBad = [ 1, 5, 1, -1, -1, -1 ]
+  const bBad = "hi"
+
+  t.throws(() => Util.geometricMargin(vBad, wGood, yGood, bGood), TypeError)
+  t.throws(() => Util.geometricMargin(vGood, wBad, yGood, bGood), TypeError)
+  t.throws(() => Util.geometricMargin(vGood, wGood, yBad, bGood), TypeError)
+  t.throws(() => Util.geometricMargin(vGood, wGood, yGood, bBad), TypeError)
+})
+
 // Hypothesis
 test("Hypothesis correctly classifies the input vector", (t) => {
   t.deepEqual(Util.hypothesis([ 0.4, 1 ], [ 8, 7 ], -9), 1)

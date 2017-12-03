@@ -9,6 +9,17 @@ module.exports = {
   vectorSum,
 }
 
+/*********************/
+/* PRIVATE FUNCTIONS */
+/*********************/
+
+const _isArr = (xs) => Array.isArray(xs)
+
+const _isNum = (x) => typeof(x) === "number" && !isNaN(x)
+
+/********************/
+/* PUBLIC FUNCTIONS */
+/********************/
 
 /* Given a vector returns a vector that indicates the direction of the first.
 **
@@ -17,7 +28,7 @@ module.exports = {
 */
 // direction :: [ Number ] -> [ Number ]
 function direction (v) {
-  if (!Array.isArray(v)) {
+  if (!_isArr(v)) {
     throw new TypeError("Direction expects a list of numbers")
   }
 
@@ -38,17 +49,15 @@ function direction (v) {
 // dotProduct :: [ Number ], [ Number ] -> Number
 function dotProduct (v, w) {
   if (v.length !== w.length) {
-    console.log(v)
-    console.log(w)
     throw new TypeError("Dot Product expects two equal-sized lists")
   }
 
-  if (!Array.isArray(v) || !Array.isArray(w)) {
+  if (!_isArr(v) || !_isArr(w)) {
     throw new TypeError("Dot Product expects two arrays of numbers")
   }
 
   const products = v.map((x, idx) => {
-    if (typeof(x) !== "number" || typeof(w[idx]) !== "number") {
+    if (!_isNum(x) || !_isNum(w[idx])) {
       throw new TypeError("Dot Product expects two arrays of numbers")
     }
 
@@ -65,7 +74,25 @@ function dotProduct (v, w) {
 */
 // geometricMargin :: [ Number ], [ [ Number ] ], [ Number ], Number -> Number
 function geometricMargin (v, w, y, b) {
+  if (!_isArr(v) || !_isArr(w) || !_isArr(y) || !_isNum(b)) {
+    throw new TypeError("Geometric Margin expects three lists and a number")
+  }
+
   const exampleMargin = (w_i, y_i) => {
+    if (!_isArr(w_i) || !_isNum(y_i)) {
+      const errMsg = `
+        Geometric Margin expects 'w' to be a list of lists of numbers and
+        'y' to be a list of numbers
+      `
+      throw new TypeError(errMsg)
+    }
+
+    if (y_i !== 1 && y_i !== 0 && y_i !== -1) {
+      const errMsg = "Geometric Margin expects 'y' to be either 1, 0, or -1"
+      
+      throw new TypeError(errMsg)
+    }
+
     return y_i * (dotProduct(direction(v), w_i) + b / magnitude(v))
   }
 
@@ -80,7 +107,7 @@ function geometricMargin (v, w, y, b) {
 */
 // hypothesis :: [ Number ], [ Number ], Number -> Number
 function hypothesis (v, w, b) {
-  if (!Array.isArray(v) || !Array.isArray(w) || typeof(b) !== "number") {
+  if (!_isArr(v) || !_isArr(w) || !_isNum(b)) {
     throw new TypeError("Hypothesis expects two arrays and a number")
   }
 
@@ -97,13 +124,13 @@ function hypothesis (v, w, b) {
 */
 // magnitude :: [ Number ] -> Number
 function magnitude (v) {
-  if (!Array.isArray(v)) {
+  if (!_isArr(v)) {
     throw new TypeError("Magnitude expects an array of numbers")
   }
 
   return Math.sqrt(
     v.reduce((x, xs) => {
-      if (typeof(xs) !== "number") {
+      if (!_isNum(xs)) {
         throw new TypeError("Magnitude expects an array of numbers")
       }
 
@@ -144,7 +171,7 @@ function vectorDiff (v, w) {
   }
 
   return v.map((x, idx) => {
-    if (typeof(x) !== "number" || typeof(w[idx]) !== "number") {
+    if (!_isNum(x) || !_isNum(w[idx])) {
       throw new TypeError("Vector Diff expects two arrays of numbers")
     }
 
@@ -162,7 +189,7 @@ function vectorSum (v, w) {
   }
 
   return v.map((x, idx) => {
-    if (typeof(x) !== "number" || typeof(w[idx]) !== "number") {
+    if (!_isNum(x) || !_isNum(w[idx])) {
       throw new TypeError("Vector Sum expects two arrays of numbers")
     }
 
