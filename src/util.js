@@ -74,10 +74,9 @@ function geometricMargin (v, w, y, b) {
     .reduce((x, xs) => x > xs ? xs : x) // Return smallest value in array
 }
 
-/* Given vectors v and w, we define the equation of a hyperplane as
-** w . x + b = 0, which is similar to a rise over run equation, but using
-** n-dimensional vectors. Within this function, we assume v represents
-** our hyperplane, and w represents the input to classify.
+/* Given vectors v and w, we determine how to classify the examples (w) by
+** using the equation sign(v . w + b). Within this function, we assume
+** v represents our hyperplane, and w represents the input to classify.
 */
 // hypothesis :: [ Number ], [ Number ], Number -> Number
 function hypothesis (v, w, b) {

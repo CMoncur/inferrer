@@ -30,14 +30,45 @@ test("Dot product expects two-item tuple of numbers", (t) => {
 
 // Geometric Margin
 test("Geometric Margin correctly finds smallest margin in a dataset", (t) => {
-  const v = [ -0.4, -1 ]
+  // Hyperplane
+  const v = [ -0.5, -1 ]
+
+  // Examples
   const w = [
-    [ 2, 7], [ 8, 3 ], [ 7, 5 ], [ 4, 4 ], [ 4, 6 ], [ 1, 3 ], [ 2, 5 ],
-    [ 8, 7 ], [ 4, 10 ], [ 9, 7 ], [ 7, 10 ], [ 9, 6 ], [ 4, 8 ], [ 10, 10 ]
+    [ 3, 6 ], [ 9, 3 ], [ 5, 4 ], [ 4, 5 ], [ 8, 3 ],
+    [ 1, 8 ], [ 6, 6 ], [ 9, 5 ], [ 7, 8 ], [ 3, 7 ]
   ]
-  const y = [ 1, 1, 1, 1, 1, 1, 1, -1, -1, -1, -1, -1, -1, -1 ]
+
+  // Classifications
+  const y = [ 1, 1, 1, 1, 1, -1, -1, -1, -1, -1 ]
+
+  // Hyperplane offsets
+  const b = 8
+
+  t.deepEqual(Util.geometricMargin(v, w, y, b), 0.44721359549995743)
+})
+
+test("Geometric Margin selects the largest margin of two hyperplanes", (t) => {
+  // Hyperplane
+  const v = [ -0.5, -1 ]
+
+  // Examples
+  const w = [
+    [ 3, 6 ], [ 9, 3 ], [ 5, 4 ], [ 4, 5 ], [ 8, 3 ],
+    [ 1, 8 ], [ 6, 6 ], [ 9, 5 ], [ 7, 8 ], [ 3, 7 ]
+  ]
+
+  // Classifications
+  const y = [ 1, 1, 1, 1, 1, -1, -1, -1, -1, -1 ]
+
+  // Hyperplane offsets
   const b_1 = 8
-  t.deepEqual(Util.geometricMargin(v, w, y, b_1), 0.18569533817705164)
+  const b_2 = 8.2
+
+  // Margins
+  const largerMargin = Util.geometricMargin(v, w, y, b_1)
+  const smallerMargin = Util.geometricMargin(v, w, y, b_2)
+  t.truthy(largerMargin > smallerMargin)
 })
 
 // Hypothesis
