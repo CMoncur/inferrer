@@ -2,6 +2,7 @@
 const test = require("ava")
 
 // Internal Dependencies
+const Kernel = require("./src/kernel")
 const Util = require("./src/util")
 
 /* UTILITIES */
@@ -146,4 +147,18 @@ test("Vector Sum expects two-item tuple of numbers", (t) => {
   t.throws(() => Util.vectorSum([ 3, "hi" ], [ 5, 6 ]), TypeError)
   t.throws(() => Util.vectorSum([ 3, 4 ], [ "hi", 6 ]), TypeError)
   t.throws(() => Util.vectorSum([ 3, 4 ], [ 5, "hi" ]), TypeError)
+})
+
+/* KERNEL FUNCTIONS */
+// Linear
+// Dot Product
+test("Linear kernel calculates sum of product of given lists", (t) => {
+  t.deepEqual(Kernel.linear([ 3, 4 ], [ 5, 6 ]), 39)
+})
+
+test("Linear kernel expects two-item tuple of numbers", (t) => {
+  t.throws(() => Kernel.linear([ "hi", 4 ], [ 5, 6 ]), TypeError)
+  t.throws(() => Kernel.linear([ 3, "hi" ], [ 5, 6 ]), TypeError)
+  t.throws(() => Kernel.linear([ 3, 4 ], [ "hi", 6 ]), TypeError)
+  t.throws(() => Kernel.linear([ 3, 4 ], [ 5, "hi" ]), TypeError)
 })

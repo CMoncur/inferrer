@@ -1,4 +1,4 @@
-// Internal Dependencies
+// Dependencies
 const Defaults = require("../env/defaults")
 
 module.exports = class Svm {
