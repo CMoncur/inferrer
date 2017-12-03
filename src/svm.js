@@ -3,24 +3,45 @@ const Defaults = require("../env/defaults")
 const Util = require("./util")
 
 module.exports = class Svm {
-  constructor (opts = {
-    c: Defaults.SVM_OPTIONS.c,
-    kernel: Defaults.SVM_OPTIONS.kernel,
-    passes: Defaults.SVM_OPTIONS.passes,
-    tolerance: Defaults.SVM_OPTIONS.tolerance,
-  }) {
+  constructor (opts = {}) {
     // Optional Properties
-    this.c = opts.c
-    this.kernel = opts.kernel
-    this.passes = opts.passes
-    this.tolerance = opts.tolerance
+    if (Util.isNum(opts.c)) {
+      this.c = opts.c
+    } else {
+      this.c = Defaults.SVM_OPTIONS.c
+    }
+
+    if (Util.isKernel(opts.kernel)) {
+      this.kernel = opts.kernel
+    } else {
+      this.kernel = Defaults.SVM_OPTIONS.kernel
+    }
+
+    if (Util.isNum(opts.passes)) {
+      this.passes = opts.passes
+    } else {
+      this.passes = Defaults.SVM_OPTIONS.passes
+    }
+
+    if (Util.isNum(opts.tolerance)) {
+      this.tolerance = opts.tolerance
+    } else {
+      this.tolerance = Defaults.SVM_OPTIONS.tolerance
+    }
 
     // Training Properties
     this.x = []
     this.y = []
   }
 
-  // alias data = { input: [ [ Number ] ], classification: [ Number ] }
+  predict () {
+    return null // TODO
+  }
+
+  /* type alias TrainingData =
+  **   { input: [ [ Number ] ], classification: [ Number ] }
+  */
+  // train :: TrainingData -> Void
   train (data) {
     // Check data to ensure it is properly formed
     if (!Util.isArr(data.input) || !Util.isArr(data.classification)) {
@@ -42,25 +63,21 @@ module.exports = class Svm {
     }
 
     if(!data.input.every((x) => x.length === data.input[0].length)) {
-      throw new TypeError("All training input vectors must be of equal length")
+      throw new TypeError("All input vectors must be of equal length")
     }
 
     if(!data.classification.every((x) => {
       return x === 1 || x === 0 || x === -1
     })) {
-      const errMsg = "Training classifications must be either 1, 0, or -1"
-
-      throw new TypeError(errMsg)
+      throw new TypeError("All classifications must be either 1, 0, or -1")
     }
 
     // If data is sanitary, include as training data
     this.x = this.x.concat(data.input)
     this.y = this.y.concat(data.classification)
 
-    return null // TODO
-  }
+    console.log(this.c)
 
-  predict () {
     return null // TODO
   }
 }

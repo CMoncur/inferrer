@@ -1,11 +1,21 @@
 module.exports = {
   isArr,
+  isKernel,
   isNum,
 }
 
 // isArr :: [ a ] -> Bool
 function isArr (xs) {
   return Array.isArray(xs)
+}
+
+// isKernel :: a -> Bool
+function isKernel (x) {
+  if (x === "linear") {
+    return true
+  }
+
+  return false
 }
 
 // isNum :: a -> Bool
