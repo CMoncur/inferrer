@@ -2,31 +2,31 @@
 const test = require("ava")
 
 // Internal Dependencies
+const Formula = require("./src/formula")
 const Kernel = require("./src/kernel")
-const Util = require("./src/util")
 
 /* UTILITIES */
 // Direction
 test("Direction correctly calculates cosine of angles", (t) => {
-  t.deepEqual(Util.direction([ 3, 4 ]), [ 0.6, 0.8 ])
+  t.deepEqual(Formula.direction([ 3, 4 ]), [ 0.6, 0.8 ])
 })
 
 test("Direction expects two-item tuple of numbers", (t) => {
-  t.throws(() => Util.direction(4), TypeError)
-  t.throws(() => Util.direction([ "hi", 4 ]), TypeError)
-  t.throws(() => Util.direction([ 3, "hi" ]), TypeError)
+  t.throws(() => Formula.direction(4), TypeError)
+  t.throws(() => Formula.direction([ "hi", 4 ]), TypeError)
+  t.throws(() => Formula.direction([ 3, "hi" ]), TypeError)
 })
 
 // Dot Product
 test("Dot product correctly calculates sum of product of given lists", (t) => {
-  t.deepEqual(Util.dotProduct([ 3, 4 ], [ 5, 6 ]), 39)
+  t.deepEqual(Formula.dotProduct([ 3, 4 ], [ 5, 6 ]), 39)
 })
 
 test("Dot product expects two-item tuple of numbers", (t) => {
-  t.throws(() => Util.dotProduct([ "hi", 4 ], [ 5, 6 ]), TypeError)
-  t.throws(() => Util.dotProduct([ 3, "hi" ], [ 5, 6 ]), TypeError)
-  t.throws(() => Util.dotProduct([ 3, 4 ], [ "hi", 6 ]), TypeError)
-  t.throws(() => Util.dotProduct([ 3, 4 ], [ 5, "hi" ]), TypeError)
+  t.throws(() => Formula.dotProduct([ "hi", 4 ], [ 5, 6 ]), TypeError)
+  t.throws(() => Formula.dotProduct([ 3, "hi" ], [ 5, 6 ]), TypeError)
+  t.throws(() => Formula.dotProduct([ 3, 4 ], [ "hi", 6 ]), TypeError)
+  t.throws(() => Formula.dotProduct([ 3, 4 ], [ 5, "hi" ]), TypeError)
 })
 
 // Geometric Margin
@@ -46,7 +46,7 @@ test("Geometric Margin correctly finds smallest margin in a dataset", (t) => {
   // Hyperplane offsets
   const b = 8
 
-  t.deepEqual(Util.geometricMargin(v, w, y, b), 0.44721359549995743)
+  t.deepEqual(Formula.geometricMargin(v, w, y, b), 0.44721359549995743)
 })
 
 test("Geometric Margin selects the largest margin of two hyperplanes", (t) => {
@@ -67,8 +67,8 @@ test("Geometric Margin selects the largest margin of two hyperplanes", (t) => {
   const b_2 = 8.2
 
   // Margins
-  const largerMargin = Util.geometricMargin(v, w, y, b_1)
-  const smallerMargin = Util.geometricMargin(v, w, y, b_2)
+  const largerMargin = Formula.geometricMargin(v, w, y, b_1)
+  const smallerMargin = Formula.geometricMargin(v, w, y, b_2)
   t.truthy(largerMargin > smallerMargin)
 })
 
@@ -85,68 +85,68 @@ test("Geometric Margin expects three lists and a number", (t) => {
   const yBad = [ 1, 5, 1, -1, -1, -1 ]
   const bBad = "hi"
 
-  t.throws(() => Util.geometricMargin(vBad, wGood, yGood, bGood), TypeError)
-  t.throws(() => Util.geometricMargin(vGood, wBad, yGood, bGood), TypeError)
-  t.throws(() => Util.geometricMargin(vGood, wGood, yBad, bGood), TypeError)
-  t.throws(() => Util.geometricMargin(vGood, wGood, yGood, bBad), TypeError)
+  t.throws(() => Formula.geometricMargin(vBad, wGood, yGood, bGood), TypeError)
+  t.throws(() => Formula.geometricMargin(vGood, wBad, yGood, bGood), TypeError)
+  t.throws(() => Formula.geometricMargin(vGood, wGood, yBad, bGood), TypeError)
+  t.throws(() => Formula.geometricMargin(vGood, wGood, yGood, bBad), TypeError)
 })
 
 // Hypothesis
 test("Hypothesis correctly classifies the input vector", (t) => {
-  t.deepEqual(Util.hypothesis([ 0.4, 1 ], [ 8, 7 ], -9), 1)
-  t.deepEqual(Util.hypothesis([ 0.4, 1 ], [ 1, 3 ], -9), -1)
+  t.deepEqual(Formula.hypothesis([ 0.4, 1 ], [ 8, 7 ], -9), 1)
+  t.deepEqual(Formula.hypothesis([ 0.4, 1 ], [ 1, 3 ], -9), -1)
 })
 
 test("Hypothesis expects two lists of numbers and a number", (t) => {
-  t.throws(() => Util.hypothesis("hi", [ 5, 6 ], 4), TypeError)
-  t.throws(() => Util.hypothesis([ 3, 4 ], "hi", 4), TypeError)
-  t.throws(() => Util.hypothesis([ 3, 4 ], [ 5, 6 ], "hi"), TypeError)
+  t.throws(() => Formula.hypothesis("hi", [ 5, 6 ], 4), TypeError)
+  t.throws(() => Formula.hypothesis([ 3, 4 ], "hi", 4), TypeError)
+  t.throws(() => Formula.hypothesis([ 3, 4 ], [ 5, 6 ], "hi"), TypeError)
 })
 
 // Magnitude
 test("Magnitude correctly calculates Euclidean Norm", (t) => {
-  t.deepEqual(Util.magnitude([ 3, 4 ]), 5)
+  t.deepEqual(Formula.magnitude([ 3, 4 ]), 5)
 })
 
 test("Magnitude expects a list of numbers", (t) => {
-  t.throws(() => Util.magnitude(4), TypeError)
-  t.throws(() => Util.magnitude([ "hi", 4 ]), TypeError)
-  t.throws(() => Util.magnitude([ 3, "hi" ]), TypeError)
+  t.throws(() => Formula.magnitude(4), TypeError)
+  t.throws(() => Formula.magnitude([ "hi", 4 ]), TypeError)
+  t.throws(() => Formula.magnitude([ 3, "hi" ]), TypeError)
 })
 
 // Sign
 test("Sign correctly classifies the sign of a number", (t) => {
-  t.deepEqual(Util.sign(0), 0)
-  t.deepEqual(Util.sign(5), 1)
-  t.deepEqual(Util.sign(-5), -1)
+  t.deepEqual(Formula.sign(0), 0)
+  t.deepEqual(Formula.sign(5), 1)
+  t.deepEqual(Formula.sign(-5), -1)
 })
 
 test("Sign expects a number", (t) => {
-  t.throws(() => Util.sign("hi"), TypeError)
+  t.throws(() => Formula.sign("hi"), TypeError)
 })
 
 // Vector Diff
 test("Vector Diff correctly calculates new vector", (t) => {
-  t.deepEqual(Util.vectorDiff([ 3, 4 ], [ 5, 6 ]), [ -2, -2 ])
+  t.deepEqual(Formula.vectorDiff([ 3, 4 ], [ 5, 6 ]), [ -2, -2 ])
 })
 
 test("Vector Diff expects two-item tuple of numbers", (t) => {
-  t.throws(() => Util.vectorDiff([ "hi", 4 ], [ 5, 6 ]), TypeError)
-  t.throws(() => Util.vectorDiff([ 3, "hi" ], [ 5, 6 ]), TypeError)
-  t.throws(() => Util.vectorDiff([ 3, 4 ], [ "hi", 6 ]), TypeError)
-  t.throws(() => Util.vectorDiff([ 3, 4 ], [ 5, "hi" ]), TypeError)
+  t.throws(() => Formula.vectorDiff([ "hi", 4 ], [ 5, 6 ]), TypeError)
+  t.throws(() => Formula.vectorDiff([ 3, "hi" ], [ 5, 6 ]), TypeError)
+  t.throws(() => Formula.vectorDiff([ 3, 4 ], [ "hi", 6 ]), TypeError)
+  t.throws(() => Formula.vectorDiff([ 3, 4 ], [ 5, "hi" ]), TypeError)
 })
 
 // Vector Sum
 test("Vector Sum correctly calculates new vector", (t) => {
-  t.deepEqual(Util.vectorSum([ 3, 4 ], [ 5, 6 ]), [ 8, 10 ])
+  t.deepEqual(Formula.vectorSum([ 3, 4 ], [ 5, 6 ]), [ 8, 10 ])
 })
 
 test("Vector Sum expects two-item tuple of numbers", (t) => {
-  t.throws(() => Util.vectorSum([ "hi", 4 ], [ 5, 6 ]), TypeError)
-  t.throws(() => Util.vectorSum([ 3, "hi" ], [ 5, 6 ]), TypeError)
-  t.throws(() => Util.vectorSum([ 3, 4 ], [ "hi", 6 ]), TypeError)
-  t.throws(() => Util.vectorSum([ 3, 4 ], [ 5, "hi" ]), TypeError)
+  t.throws(() => Formula.vectorSum([ "hi", 4 ], [ 5, 6 ]), TypeError)
+  t.throws(() => Formula.vectorSum([ 3, "hi" ], [ 5, 6 ]), TypeError)
+  t.throws(() => Formula.vectorSum([ 3, 4 ], [ "hi", 6 ]), TypeError)
+  t.throws(() => Formula.vectorSum([ 3, 4 ], [ 5, "hi" ]), TypeError)
 })
 
 /* KERNEL FUNCTIONS */

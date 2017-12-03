@@ -3,11 +3,7 @@ module.exports = {
 }
 
 // Dependencies
-const Util = require("./util")
-
-/********************/
-/* PUBLIC FUNCTIONS */
-/********************/
+const Formula = require("./formula")
 
 /* As a general note, I'd like to keep this file as clean and easy to follow
 ** as possible. Therefore, all type checking will occur within Utilities.
@@ -18,5 +14,5 @@ const Util = require("./util")
 */
 // linear :: [ Number ], [ Number ] -> Number
 function linear(v, w) {
-  return Util.dotProduct(v, w)
+  return Formula.dotProduct(v, w)
 }

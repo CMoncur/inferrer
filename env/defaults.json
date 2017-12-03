@@ -1,6 +1,9 @@
 {
   "APP": "inferrer",
   "SVM_OPTIONS": {
-    "yeah": "cool haha yeah"
+    "c": 3,
+    "kernel": "linear",
+    "passes": 10000,
+    "tolerance": 0.001
   }
 }
