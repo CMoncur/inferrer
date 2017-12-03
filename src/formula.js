@@ -10,7 +10,7 @@ module.exports = {
 }
 
 // Dependencies
-const { isArr, isNum } = require("./util")
+const Util = require("./util")
 
 /* Given a vector returns a vector that indicates the direction of the first.
 **
@@ -19,14 +19,14 @@ const { isArr, isNum } = require("./util")
 */
 // direction :: [ Number ] -> [ Number ]
 function direction (v) {
-  if (!isArr(v)) {
+  if (!Util.isArr(v)) {
     throw new TypeError("Direction expects a list of numbers")
   }
 
   const mag = magnitude(v)
 
   return v.map((x) => {
-    if (!isNum(x)) {
+    if (!Util.isNum(x)) {
       throw new TypeError("Direction expects a list of numbers")
     }
 
@@ -43,12 +43,12 @@ function dotProduct (v, w) {
     throw new TypeError("Dot Product expects two equal-sized lists")
   }
 
-  if (!isArr(v) || !isArr(w)) {
+  if (!Util.isArr(v) || !Util.isArr(w)) {
     throw new TypeError("Dot Product expects two arrays of numbers")
   }
 
   const products = v.map((x, idx) => {
-    if (!isNum(x) || !isNum(w[idx])) {
+    if (!Util.isNum(x) || !Util.isNum(w[idx])) {
       throw new TypeError("Dot Product expects two arrays of numbers")
     }
 
@@ -65,12 +65,12 @@ function dotProduct (v, w) {
 */
 // geometricMargin :: [ Number ], [ [ Number ] ], [ Number ], Number -> Number
 function geometricMargin (v, w, y, b) {
-  if (!isArr(v) || !isArr(w) || !isArr(y) || !isNum(b)) {
+  if (!Util.isArr(v) || !Util.isArr(w) || !Util.isArr(y) || !Util.isNum(b)) {
     throw new TypeError("Geometric Margin expects three lists and a number")
   }
 
   const exampleMargin = (w_i, y_i) => {
-    if (!isArr(w_i) || !isNum(y_i)) {
+    if (!Util.isArr(w_i) || !Util.isNum(y_i)) {
       const errMsg = `
         Geometric Margin expects 'w' to be a list of lists of numbers and
         'y' to be a list of numbers
@@ -98,7 +98,7 @@ function geometricMargin (v, w, y, b) {
 */
 // hypothesis :: [ Number ], [ Number ], Number -> Number
 function hypothesis (v, w, b) {
-  if (!isArr(v) || !isArr(w) || !isNum(b)) {
+  if (!Util.isArr(v) || !Util.isArr(w) || !Util.isNum(b)) {
     throw new TypeError("Hypothesis expects two arrays and a number")
   }
 
@@ -115,13 +115,13 @@ function hypothesis (v, w, b) {
 */
 // magnitude :: [ Number ] -> Number
 function magnitude (v) {
-  if (!isArr(v)) {
+  if (!Util.isArr(v)) {
     throw new TypeError("Magnitude expects an array of numbers")
   }
 
   return Math.sqrt(
     v.reduce((x, xs) => {
-      if (!isNum(xs)) {
+      if (!Util.isNum(xs)) {
         throw new TypeError("Magnitude expects an array of numbers")
       }
 
@@ -135,7 +135,7 @@ function magnitude (v) {
 */
 // sign :: Number -> Number
 function sign (x) {
-  if (!isNum(x)) {
+  if (!Util.isNum(x)) {
     throw new TypeError("Sign expects a number")
   }
 
@@ -162,7 +162,7 @@ function vectorDiff (v, w) {
   }
 
   return v.map((x, idx) => {
-    if (!isNum(x) || !isNum(w[idx])) {
+    if (!Util.isNum(x) || !Util.isNum(w[idx])) {
       throw new TypeError("Vector Diff expects two arrays of numbers")
     }
 
@@ -180,7 +180,7 @@ function vectorSum (v, w) {
   }
 
   return v.map((x, idx) => {
-    if (!isNum(x) || !isNum(w[idx])) {
+    if (!Util.isNum(x) || !Util.isNum(w[idx])) {
       throw new TypeError("Vector Sum expects two arrays of numbers")
     }
 

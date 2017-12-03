@@ -1,23 +1,19 @@
-// Internal Dependencies
-const Util = require("./src/util")
-// TODO const Svm = require("./src/svm")
+// Dependencies
+const Svm = require("./src/svm")
 
-const datos = {
-  positive: [
-    [ 1, 5 ],
-    [ 2, 3 ],
-    [ -3, 4 ]
+const trainingData = {
+  input: [
+    [ 0, 0 ],
+    [ 0, 1 ],
+    [ 1, 0 ],
+    [ 1, 1 ]
   ],
 
-  negative: [
-    [ 5, 2 ],
-    [ 4, -1 ],
-    [ 6, 1 ]
-  ],
+  classification: [ -1, 1, 1, -1 ],
 }
 
-// TODO const yeah = new Svm
+const XOR = new Svm(trainingData)
 
-console.log(datos)
+XOR.train(trainingData)
 
-console.log(Util.direction([ 3, 4 ]))
+console.log(trainingData)
