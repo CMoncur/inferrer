@@ -13,7 +13,7 @@ module.exports = {
 /* Given a vector returns a vector that indicates the direction of the first.
 **
 ** In the simplest terms, direction of a vector is equal to the cosine of
-** it's angles
+** it's angles. Also known as a unit vector of the original.
 */
 // direction :: [ Number ] -> [ Number ]
 function direction (v) {
@@ -38,6 +38,8 @@ function direction (v) {
 // dotProduct :: [ Number ], [ Number ] -> Number
 function dotProduct (v, w) {
   if (v.length !== w.length) {
+    console.log(v)
+    console.log(w)
     throw new TypeError("Dot Product expects two equal-sized lists")
   }
 
@@ -57,14 +59,14 @@ function dotProduct (v, w) {
 }
 
 /* The geometric margin is used to calculate the distance between a given
-** vector and a hyperplane. In this context, w represents our examples.
+** vector and a hyperplane. In this context, w represents our examples, y
+** represents the classifications of w, and v represents our separating
+** hyperplane.
 */
-// geometricMargin :: [ Number ], [ Number ], [ Number ], Number -> Number
+// geometricMargin :: [ Number ], [ [ Number ] ], [ Number ], Number -> Number
 function geometricMargin (v, w, y, b) {
   const exampleMargin = (w_i, y_i) => {
-    const vDir = direction(v)
-
-    return y_i * (dotProduct(vDir, w_i) + b / vDir)
+    return y_i * (dotProduct(direction(v), w_i) + b / magnitude(v))
   }
 
   return w

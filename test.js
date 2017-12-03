@@ -28,6 +28,18 @@ test("Dot product expects two-item tuple of numbers", (t) => {
   t.throws(() => Util.dotProduct([ 3, 4 ], [ 5, "hi" ]), TypeError)
 })
 
+// Geometric Margin
+test("Geometric Margin correctly finds smallest margin in a dataset", (t) => {
+  const v = [ -0.4, -1 ]
+  const w = [
+    [ 2, 7], [ 8, 3 ], [ 7, 5 ], [ 4, 4 ], [ 4, 6 ], [ 1, 3 ], [ 2, 5 ],
+    [ 8, 7 ], [ 4, 10 ], [ 9, 7 ], [ 7, 10 ], [ 9, 6 ], [ 4, 8 ], [ 10, 10 ]
+  ]
+  const y = [ 1, 1, 1, 1, 1, 1, 1, -1, -1, -1, -1, -1, -1, -1 ]
+  const b_1 = 8
+  t.deepEqual(Util.geometricMargin(v, w, y, b_1), 0.18569533817705164)
+})
+
 // Hypothesis
 test("Hypothesis correctly classifies the input vector", (t) => {
   t.deepEqual(Util.hypothesis([ 0.4, 1 ], [ 8, 7 ], -9), 1)
