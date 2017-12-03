@@ -2,6 +2,9 @@
 const Defaults = require("../env/defaults")
 const Util = require("./util")
 
+/* The SVM class loosely follows Stanford's Simplified SMO algorith, which
+** can be found here: http://cs229.stanford.edu/materials/smo.pdf
+*/
 module.exports = class Svm {
   constructor (opts = {}) {
     // Optional Properties
@@ -34,16 +37,20 @@ module.exports = class Svm {
     this.y = []
   }
 
-  predict () {
+  /* PUBLIC METHODS */
+  classify () {
     return null // TODO
   }
 
-  /* type alias TrainingData =
-  **   { input: [ [ Number ] ], classification: [ Number ] }
+  /* alias TrainingData =
+  **   {
+  **     input: [ [ Number ] ],
+  **     classification: [ Number ],
+  **   }
   */
   // train :: TrainingData -> Void
   train (data) {
-    // Check data to ensure it is properly formed
+    // Check data to ensure it is properly formed, expects the following:
     if (!Util.isArr(data.input) || !Util.isArr(data.classification)) {
       const errMsg = `
         SVM requires training data in the form of a list of lists of numbers,
@@ -76,8 +83,8 @@ module.exports = class Svm {
     this.x = this.x.concat(data.input)
     this.y = this.y.concat(data.classification)
 
-    console.log(this.c)
-
     return null // TODO
   }
+
+  /* PRIVATE METHODS */
 }

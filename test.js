@@ -117,7 +117,7 @@ test("Magnitude expects a list of numbers", (t) => {
 
 // Sign
 test("Sign correctly classifies the sign of a number", (t) => {
-  t.deepEqual(Formula.sign(0), 0)
+  t.deepEqual(Formula.sign(0), -1)
   t.deepEqual(Formula.sign(5), 1)
   t.deepEqual(Formula.sign(-5), -1)
 })

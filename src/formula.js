@@ -131,7 +131,8 @@ function magnitude (v) {
 }
 
 /* The sign of number x is 1 if x is greater than 0, -1 if x is less than 0,
-** and 0 if x is equal to 0.
+** and 0 if x is equal to 0. For simplicity, however, we are defaulting
+** 0 values to negatives.
 */
 // sign :: Number -> Number
 function sign (x) {
@@ -139,17 +140,11 @@ function sign (x) {
     throw new TypeError("Sign expects a number")
   }
 
-  if (x === 0) {
-    return 0
-  }
-
   else if (x > 0) {
     return 1
   }
 
-  else if (x < 0) {
-    return -1
-  }
+  return -1
 }
 
 /* Two vectors may be subtracted, resulting in a third vector which is the
