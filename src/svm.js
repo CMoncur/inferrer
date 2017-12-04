@@ -3,49 +3,66 @@ const Defaults = require("../env/defaults")
 const Kernel = require("./kernel")
 const Util = require("./util")
 
-/* The SVM class loosely follows Stanford's Simplified SMO algorith, which
-** can be found here: http://cs229.stanford.edu/materials/smo.pdf
+/* The SVM class is based on John C. Platt's SMO algorithm. The documentation
+** thereunto pertaining can be found here:
+** https://microsoft.com/en-us/research/wp-content/uploads/2016/02/tr-98-14.pdf
 */
 module.exports = class Svm {
   constructor (opts = {}) {
     // Optional Properties (Public)
     if (Util.isNum(opts.c)) {
       this.c = opts.c
-    } else {
+    }
+
+    else {
       this.c = Defaults.SVM_OPTIONS.c
     }
 
     if (Util.isNum(opts.iterations)) { // TODO: Are iterations necessary?
       this.iterations = opts.iterations
-    } else {
+    }
+
+    else {
       this.iterations = Defaults.SVM_OPTIONS.iterations
     }
 
     if (Util.isKernel(opts.kernel)) {
       this.kernel = opts.kernel
-    } else {
+    }
+
+    else {
       this.kernel = Defaults.SVM_OPTIONS.kernel
     }
 
     if (Util.isNum(opts.passes)) {
       this.passes = opts.passes
-    } else {
+    }
+
+    else {
       this.passes = Defaults.SVM_OPTIONS.passes
     }
 
     if (Util.isNum(opts.tolerance)) {
       this.tolerance = opts.tolerance
-    } else {
+    }
+
+    else {
       this.tolerance = Defaults.SVM_OPTIONS.tolerance
     }
 
     // Training Properties (Private)
     this.x = [] // Examples
     this.y = [] // Labels
+    this.m = 0 // Number of training examples
+    this.alphas = [] // Alphas
   }
 
   classify () {
     return null // TODO
+  }
+
+  examine () {
+    // TODO
   }
 
   kernel (v, w) {
@@ -98,24 +115,37 @@ module.exports = class Svm {
     // If data is sanitary, include as training data
     this.x = this.x.concat(data.input)
     this.y = this.y.concat(data.classification)
-    this.m = this.y.length
+    this.m = this.x.length
+    this.alphas = Array(this.m).fill(0) // Array of 'm' length filled with 0s
 
-    // Simplified SMO Algorithm
-    let b = 0, passes = 0
+    // Find hyperplane and offset using John C. Platt's SMO Algorithm
+    let changed = 0, examineAll = true
 
-    while (passes < this.passes) {
-      let changedAlphas = 0
+    while (changed > 0 || examineAll) {
+      changed = 0
 
-      // Length of labels 'y' is represented by 'm'
-      for (let i = 0; i < this.y.length; i++) {
-        // Calculate E_i = f(x(i)) − y(i)
-        const innerProducts = (index) => {
-          return "yeah"
+      if (examineAll) {
+        for (let i = 0; i < this.m; i++) {
+          changed += this.examine(i)
         }
-
-        const E_i = innerProducts() - this.y[i]
       }
-      passes++
-    } // End while
-  } // End train
-} // End Svm
+
+      // Find indices of alphas that are greater than zero and less than C
+      else {
+        this.alphas.forEach((a_i, i) => {
+          if (a_i !== 0 && a_i < this.c) {
+            this.examine(i)
+          }
+        })
+      }
+
+      if (examineAll) {
+        examineAll = false
+      }
+
+      else if (changed === 0) {
+        examineAll = true
+      }
+    }
+  }
+}
