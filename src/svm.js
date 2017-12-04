@@ -1,5 +1,6 @@
 // Dependencies
 const Defaults = require("../env/defaults")
+const Kernel = require("./kernel")
 const Util = require("./util")
 
 /* The SVM class loosely follows Stanford's Simplified SMO algorith, which
@@ -7,11 +8,17 @@ const Util = require("./util")
 */
 module.exports = class Svm {
   constructor (opts = {}) {
-    // Optional Properties
+    // Optional Properties (Public)
     if (Util.isNum(opts.c)) {
       this.c = opts.c
     } else {
       this.c = Defaults.SVM_OPTIONS.c
+    }
+
+    if (Util.isNum(opts.iterations)) { // TODO: Are iterations necessary?
+      this.iterations = opts.iterations
+    } else {
+      this.iterations = Defaults.SVM_OPTIONS.iterations
     }
 
     if (Util.isKernel(opts.kernel)) {
@@ -32,14 +39,23 @@ module.exports = class Svm {
       this.tolerance = Defaults.SVM_OPTIONS.tolerance
     }
 
-    // Training Properties
-    this.x = []
-    this.y = []
+    // Training Properties (Private)
+    this.x = [] // Examples
+    this.y = [] // Labels
   }
 
-  /* PUBLIC METHODS */
   classify () {
     return null // TODO
+  }
+
+  kernel (v, w) {
+    // TODO: Implement other kernel functions
+    if (this.kernel === "linear") {
+      return Kernel.linear(v, w)
+    }
+
+    // Default to linear kernel function
+    return Kernel.linear(v, w)
   }
 
   /* alias TrainingData =
@@ -82,9 +98,24 @@ module.exports = class Svm {
     // If data is sanitary, include as training data
     this.x = this.x.concat(data.input)
     this.y = this.y.concat(data.classification)
+    this.m = this.y.length
 
-    return null // TODO
-  }
+    // Simplified SMO Algorithm
+    let b = 0, passes = 0
 
-  /* PRIVATE METHODS */
-}
+    while (passes < this.passes) {
+      let changedAlphas = 0
+
+      // Length of labels 'y' is represented by 'm'
+      for (let i = 0; i < this.y.length; i++) {
+        // Calculate E_i = f(x(i)) − y(i)
+        const innerProducts = (index) => {
+          return "yeah"
+        }
+
+        const E_i = innerProducts() - this.y[i]
+      }
+      passes++
+    } // End while
+  } // End train
+} // End Svm

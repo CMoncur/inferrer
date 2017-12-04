@@ -2,8 +2,9 @@
   "APP": "inferrer",
   "SVM_OPTIONS": {
     "c": 3,
+    "iterations": 10000,
     "kernel": "linear",
-    "passes": 10000,
+    "passes": 10,
     "tolerance": 0.001
   }
 }
