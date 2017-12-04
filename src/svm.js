@@ -10,45 +10,25 @@ const Util = require("./util")
 module.exports = class Svm {
   constructor (opts = {}) {
     // Optional Properties (Public)
-    if (Util.isNum(opts.c)) {
-      this.c = opts.c
-    }
+    Util.isNum(opts.c)
+      ? this.c = opts.c
+      : this.c = Defaults.SVM_OPTIONS.c
 
-    else {
-      this.c = Defaults.SVM_OPTIONS.c
-    }
+    Util.isNum(opts.iterations) // TODO I don't think this param is necessary
+      ? this.iterations = opts.iterations
+      : this.iterations = Defaults.SVM_OPTIONS.iterations
 
-    if (Util.isNum(opts.iterations)) { // TODO: Are iterations necessary?
-      this.iterations = opts.iterations
-    }
+    Util.isKernel(opts.kernel)
+      ? this.kernel = opts.kernel
+      : this.kernel = Defaults.SVM_OPTIONS.kernel
 
-    else {
-      this.iterations = Defaults.SVM_OPTIONS.iterations
-    }
+    Util.isNum(opts.passes)
+      ? this.passes = opts.passes
+      : this.passes = Defaults.SVM_OPTIONS.passes
 
-    if (Util.isKernel(opts.kernel)) {
-      this.kernel = opts.kernel
-    }
-
-    else {
-      this.kernel = Defaults.SVM_OPTIONS.kernel
-    }
-
-    if (Util.isNum(opts.passes)) {
-      this.passes = opts.passes
-    }
-
-    else {
-      this.passes = Defaults.SVM_OPTIONS.passes
-    }
-
-    if (Util.isNum(opts.tolerance)) {
-      this.tolerance = opts.tolerance
-    }
-
-    else {
-      this.tolerance = Defaults.SVM_OPTIONS.tolerance
-    }
+    Util.isNum(opts.tolerance)
+      ? this.tolerance = opts.tolerance
+      : this.tolerance = Defaults.SVM_OPTIONS.tolerance
 
     // Training Properties (Private)
     this.x = [] // Examples
@@ -59,10 +39,6 @@ module.exports = class Svm {
 
   classify () {
     return null // TODO
-  }
-
-  examine () {
-    // TODO
   }
 
   kernel (v, w) {
@@ -124,6 +100,7 @@ module.exports = class Svm {
     while (changed > 0 || examineAll) {
       changed = 0
 
+      // Examine every example
       if (examineAll) {
         for (let i = 0; i < this.m; i++) {
           changed += this.examine(i)
@@ -147,5 +124,11 @@ module.exports = class Svm {
         examineAll = true
       }
     }
+  }
+
+  examine (i_2) {
+    const y_2 = this.y[i_2]
+
+    return i_2
   }
 }
