@@ -1,5 +1,6 @@
 // Dependencies
 const Defaults = require("../env/defaults")
+const Formula = require("./formula")
 const Kernel = require("./kernel")
 const Util = require("./util")
 
@@ -9,7 +10,7 @@ const Util = require("./util")
 */
 module.exports = class Svm {
   constructor (opts = {}) {
-    // Optional Properties (Public)
+    // Optional Properties
     Util.isNum(opts.c)
       ? this.c = opts.c
       : this.c = Defaults.SVM_OPTIONS.c
@@ -30,11 +31,15 @@ module.exports = class Svm {
       ? this.tolerance = opts.tolerance
       : this.tolerance = Defaults.SVM_OPTIONS.tolerance
 
-    // Training Properties (Private)
+    // Training Properties
     this.x = [] // Examples
     this.y = [] // Labels
-    this.m = 0 // Number of training examples
+    this.m = 0 // Number of training vectors
+    this.n = 0 // Dimension of vectors
+    this.w = [] // Separating hyperplane
+    this.b = 0 // Offset
     this.alphas = [] // Alphas
+    this.errors = [] // Errors
   }
 
   classify () {
@@ -92,12 +97,17 @@ module.exports = class Svm {
     this.x = this.x.concat(data.input)
     this.y = this.y.concat(data.classification)
     this.m = this.x.length
-    this.alphas = Array(this.m).fill(0) // Array of 'm' length filled with 0s
+    this.n = this.x[0].length
+    this.w = Array(this.n).fill(0)
+    this.alphas = Array(this.m).fill(0)
+    this.errors = Array(this.m).fill(0)
 
     // Find hyperplane and offset using John C. Platt's SMO Algorithm
     let changed = 0, examineAll = true
 
     while (changed > 0 || examineAll) {
+      console.log("CHANGED: ", changed)
+      console.log("EXAMINE ALL: ", examineAll)
       changed = 0
 
       // Examine every example
@@ -107,11 +117,11 @@ module.exports = class Svm {
         }
       }
 
-      // Find indices of alphas that are greater than zero and less than C
+      // First heuristic
       else {
         this.alphas.forEach((a_i, i) => {
-          if (a_i !== 0 && a_i < this.c) {
-            this.examine(i)
+          if (a_i !== 0 && a_i !== this.c) {
+            changed += this.examine(i)
           }
         })
       }
@@ -124,11 +134,93 @@ module.exports = class Svm {
         examineAll = true
       }
     }
+
+    console.log("Changed: ", changed)
   }
 
   examine (i_2) {
-    const y_2 = this.y[i_2]
+    this.y_2 = this.y[i_2]
+    this.a_2 = this.alphas[i_2]
+    this.e_2 = this.cachedError(i_2) - this.y_2
 
-    return i_2
+    const nonZeroNonCAlphas = [], r_2 = this.e_2 * this.y_2
+
+    if (
+      // KKT conditions -- make UTIL function
+      (r_2 < -this.tolerance && this.a_2 < this.c) ||
+      (r_2 > this.tolerance && this.a_2 > 0)
+    ) {
+      // Tally non-zero and non-C alphas
+      this.alphas.forEach((a_i, i) => {
+        if (a_i !== 0 && a_i !== this.c) {
+          nonZeroNonCAlphas.push(i)
+        }
+      })
+
+      // Second heuristic, attempt 1
+      if (nonZeroNonCAlphas > 1) {
+        let i_1, max = 0, stepSize
+
+        nonZeroNonCAlphas.forEach((j) => {
+          stepSize = Math.abs((this.errors[j] - this.y[j]) - this.e_2)
+          if (stepSize > max) {
+            max = stepSize
+            i_1 = j
+          }
+        })
+
+        if (this.step(i_1, i_2)) {
+          return 1
+        }
+      }
+
+      // Second heuristic, attempt 2
+      let randA_i = Math.floor(Math.random() * nonZeroNonCAlphas.length)
+      for (randA_i; randA_i < nonZeroNonCAlphas.length; randA_i++) {
+        if (this.step(nonZeroNonCAlphas[randA_i], i_2)) {
+          return 1
+        }
+      }
+
+      // Second heuristic, attempt 3
+      let rand_i = Math.floor(Math.random() * this.m)
+      for (rand_i; rand_i < this.m; rand_i++) {
+        if (this.step(rand_i, i_2)) {
+          return 1
+        }
+      }
+    }
+
+    // If step is not taken, return 0 as amount of steps taken
+    return 0
+  }
+
+  step(i_1, i_2) {
+    if (!i_1) {
+      return false
+    }
+
+    if (i_1, i_2) {
+      return false
+    }
+
+    return true // TODO
+  }
+
+  // Returns cached error, otherwise finds SVM output
+  cachedError (i) {
+    // KKT condition -- make UTIL function
+    if (0 < this.alphas[i] && this.alphas[i] < this.c) {
+      return this.errors[i]
+    }
+
+    else {
+      return this.output(i) - this.y[i]
+    }
+  }
+
+  // TODO: Make UTIL function
+  output (i) {
+    return Formula.dotProduct(this.w, this.x[i]) - this.b
   }
 }
