@@ -99,8 +99,8 @@ module.exports = class Svm {
     this.m = this.x.length
     this.n = this.x[0].length
     this.w = Array(this.n).fill(0)
-    this.alphas = Array(this.m).fill(0)
-    this.errors = Array(this.m).fill(0)
+    this.alphas = Array(this.m).fill(0) // TODO: get rid of pluralization
+    this.errors = Array(this.m).fill(0) // TODO: get rid of pluralization
 
     // Find hyperplane and offset using John C. Platt's SMO Algorithm
     let changed = 0, examineAll = true
@@ -139,9 +139,11 @@ module.exports = class Svm {
   }
 
   examine (i_2) {
+    // TODO: Make these consts and pass them along to the step function
+    // so that we don't have to store them globally in the class.
     this.y_2 = this.y[i_2]
     this.a_2 = this.alphas[i_2]
-    this.e_2 = this.cachedError(i_2) - this.y_2
+    this.e_2 = this.cachedError(i_2)
 
     const nonZeroNonCAlphas = [], r_2 = this.e_2 * this.y_2
 
@@ -196,15 +198,48 @@ module.exports = class Svm {
   }
 
   step(i_1, i_2) {
-    if (!i_1) {
+    // Occurs in rare cases if all step sizes from second heuristic are < 0
+    if (!Util.isNum(i_1)) {
       return false
     }
 
+    // If both indices are the same, don't step
     if (i_1, i_2) {
       return false
     }
 
-    return true // TODO
+    // TODO: Make y_2, a_2, etc... parameters so that they don't have to be
+    // stored globally in the class
+    const
+      a_1 = this.alphas[i_1],
+      y_1 = this.y[i_1],
+      x_1 = this.x[i_1],
+      e_1 = this.cachedError(i_1),
+      s = this.y_1 * this.y_2
+
+    let l, h
+
+    if (y_1 === this.y_2) {
+      l = Math.max(0, this.a_2 + a_1 - this.c)
+      h = Math.min(this.c, this.a_2 + a_1)
+    }
+
+    else {
+      l = Math.max(0, this.a_2 - a_1)
+      h = Math.min(this.c, this.c + this.a_2 - a_1)
+    }
+
+    if (l === h) {
+      return false
+    }
+
+    const
+      k11 = this.kernel(x_1, x_1),
+      k12 = this.kernel(x_1, this.x[i_2]),
+      k22 = this.kernel(this.x[i_2], this.x[i_2]),
+      eta = k11 + k22 - 2 * k12
+
+    return true
   }
 
   // Returns cached error, otherwise finds SVM output
