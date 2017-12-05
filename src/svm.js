@@ -217,7 +217,7 @@ module.exports = class Svm {
       e_1 = this.cachedError(i_1),
       s = this.y_1 * this.y_2
 
-    let l, h
+    let a_2New, l, h
 
     if (y_1 === this.y_2) {
       l = Math.max(0, this.a_2 + a_1 - this.c)
@@ -233,11 +233,45 @@ module.exports = class Svm {
       return false
     }
 
+    // TODO: Combine this with const block above
+    // TODO: Make these read k_11, k_12, k_22
     const
       k11 = this.kernel(x_1, x_1),
       k12 = this.kernel(x_1, this.x[i_2]),
       k22 = this.kernel(this.x[i_2], this.x[i_2]),
+      // Move this calculation to Formula
       eta = k11 + k22 - 2 * k12
+
+    if (eta > 0) {
+      // Move this calculation to Formula
+      a_2New = this.a_2 + this.y_2 * (e_1 - this.e_2) / eta
+
+      if (a_2New < l) {
+        a_2New = l
+      }
+
+      else if (a_2New > h) {
+        a_2New = h
+      }
+    }
+
+    else {
+      // TODO: f_1, f_2, l_1, h_1, psi_L, psi_H should all be moved to Formula
+      const f_1 = y_1 * (e_1 + this.b) - a_1 * k11 - s * this.a_2 * k12
+
+      const f_2 = this.y_2 * (this.e_2 + this.b) - s * a_1 * k12 - this.a_2
+        * k22
+
+      const l_1 = a_1 + s * (this.a_2 - l)
+
+      const h_1 = a_1 + s * (this.a_2 - h)
+
+      const psi_L = l_1 * f_1 + l * f_2 + 0.5 * Math.pow(l_1, 2) * k11
+        + 0.5 * Math.pow(l, 2) * k22 + s * l * l_1 * k12
+
+      const psi_h = h_1 * f_1 + h * f_2 + 0.5 * Math.pow(h_1, 2) * k11
+        + 0.5 * Math.pow(h, 2) * k22 + s * h * h_1 * k12
+    }
 
     return true
   }
