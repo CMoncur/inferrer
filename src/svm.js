@@ -88,9 +88,9 @@ module.exports = class Svm {
     }
 
     if(!data.classification.every((x) => {
-      return x === 1 || x === 0 || x === -1
+      return x === 1 || x === -1
     })) {
-      throw new TypeError("All classifications must be either 1, 0, or -1")
+      throw new TypeError("All classifications must be either 1 or -1")
     }
 
     // If data is sanitary, include as training data
@@ -266,12 +266,46 @@ module.exports = class Svm {
 
       const h_1 = a_1 + s * (this.a_2 - h)
 
-      const psi_L = l_1 * f_1 + l * f_2 + 0.5 * Math.pow(l_1, 2) * k11
+      const psi_l = l_1 * f_1 + l * f_2 + 0.5 * Math.pow(l_1, 2) * k11
         + 0.5 * Math.pow(l, 2) * k22 + s * l * l_1 * k12
 
       const psi_h = h_1 * f_1 + h * f_2 + 0.5 * Math.pow(h_1, 2) * k11
         + 0.5 * Math.pow(h, 2) * k22 + s * h * h_1 * k12
+
+      if (psi_l < psi_h - this.tolerance) {
+        a_2New = l
+      }
+
+      else if (psi_l > psi_h + this.tolerance) {
+        a_2New = h
+      }
+
+      else {
+        a_2New = this.a_2
+      }
     }
+
+    // TODO make this a formula
+    const changeNegligible = Math.abs(a_2New - this.a_2) < this.tolerance
+      * (a_2New + this.a_2 + this.tolerance)
+
+    if (changeNegligible) {
+      return false
+    }
+
+    // Solve for B
+    // TODO: Make formulae for solving for B
+    const a_1New = a_1 + s * (this.a_2 - a_2New)
+
+    let b
+
+    const b_1 = e_1 + y_1 * (a_1New - a_1) * k11 + this.y_2
+      * (a_2New - this.a_2) * k12 + this.b
+
+    const b_2 = this.e_2 + y_1 * (a_1New - a_1) * k12 + this.y_2
+      * (a_2New - this.a_2) * k22 + this.b
+
+    // YOU LEFT OFF HERE
 
     return true
   }
