@@ -23,7 +23,7 @@ module.exports = class Svm {
       ? this.kernel = opts.kernel
       : this.kernel = Defaults.SVM_OPTIONS.kernel
 
-    Util.isNum(opts.passes)
+    Util.isNum(opts.passes) // TODO I don't think this param is necessary
       ? this.passes = opts.passes
       : this.passes = Defaults.SVM_OPTIONS.passes
 
@@ -35,6 +35,7 @@ module.exports = class Svm {
     this.x = [] // Examples
     this.y = [] // Labels
     this.m = 0 // Number of training vectors
+    // TODO: Get rid of N.
     this.n = 0 // Dimension of vectors
     this.w = [] // Separating hyperplane
     this.b = 0 // Offset
@@ -46,7 +47,7 @@ module.exports = class Svm {
     return null // TODO
   }
 
-  kernel (v, w) {
+  kern (v, w) {
     // TODO: Implement other kernel functions
     if (this.kernel === "linear") {
       return Kernel.linear(v, w)
@@ -106,8 +107,6 @@ module.exports = class Svm {
     let changed = 0, examineAll = true
 
     while (changed > 0 || examineAll) {
-      console.log("CHANGED: ", changed)
-      console.log("EXAMINE ALL: ", examineAll)
       changed = 0
 
       // Examine every example
@@ -134,18 +133,23 @@ module.exports = class Svm {
         examineAll = true
       }
     }
-
-    console.log("Changed: ", changed)
   }
 
   examine (i_2) {
     // TODO: Make these consts and pass them along to the step function
     // so that we don't have to store them globally in the class.
     this.y_2 = this.y[i_2]
+    this.x_2 = this.x[i_2]
     this.a_2 = this.alphas[i_2]
     this.e_2 = this.cachedError(i_2)
 
     const nonZeroNonCAlphas = [], r_2 = this.e_2 * this.y_2
+
+    // console.log("a2: ", this.a_2)
+    // console.log("e2: ", this.e_2)
+    // console.log("r2: ", r_2)
+    // console.log("x2: ", this.x_2)
+    // console.log("y2: ", this.y_2)
 
     if (
       // KKT conditions -- make UTIL function
@@ -154,7 +158,7 @@ module.exports = class Svm {
     ) {
       // Tally non-zero and non-C alphas
       this.alphas.forEach((a_i, i) => {
-        if (a_i !== 0 && a_i !== this.c) {
+        if (a_i > 0 && a_i < this.c) {
           nonZeroNonCAlphas.push(i)
         }
       })
@@ -171,7 +175,7 @@ module.exports = class Svm {
           }
         })
 
-        if (this.step(i_1, i_2)) {
+        if (Util.isNum(i_1) && this.step(i_1, i_2)) {
           return 1
         }
       }
@@ -215,9 +219,12 @@ module.exports = class Svm {
       y_1 = this.y[i_1],
       x_1 = this.x[i_1],
       e_1 = this.cachedError(i_1),
-      s = this.y_1 * this.y_2
+      s = y_1 * this.y_2
 
     let a_2New, l, h
+
+    console.log("x1: ", x_1)
+    console.log("x2: ", this.x_2)
 
     if (y_1 === this.y_2) {
       l = Math.max(0, this.a_2 + a_1 - this.c)
@@ -236,9 +243,9 @@ module.exports = class Svm {
     // TODO: Combine this with const block above
     // TODO: Make these read k_11, k_12, k_22
     const
-      k11 = this.kernel(x_1, x_1),
-      k12 = this.kernel(x_1, this.x[i_2]),
-      k22 = this.kernel(this.x[i_2], this.x[i_2]),
+      k11 = this.kern(x_1, x_1),
+      k12 = this.kern(x_1, this.x[i_2]),
+      k22 = this.kern(this.x[i_2], this.x[i_2]),
       // Move this calculation to Formula
       eta = k11 + k22 - 2 * k12
 
@@ -297,7 +304,7 @@ module.exports = class Svm {
     // TODO: Make formulae for solving for B
     const a_1New = a_1 + s * (this.a_2 - a_2New)
 
-    let b
+    let bNew
 
     const b_1 = e_1 + y_1 * (a_1New - a_1) * k11 + this.y_2
       * (a_2New - this.a_2) * k12 + this.b
@@ -305,25 +312,78 @@ module.exports = class Svm {
     const b_2 = this.e_2 + y_1 * (a_1New - a_1) * k12 + this.y_2
       * (a_2New - this.a_2) * k22 + this.b
 
-    // YOU LEFT OFF HERE
+    if (0 < a_1 && a_1 < this.c) {
+      bNew = b_1
+    }
+
+    else if (0 < this.a_2 && this.a_2 < this.c) {
+      bNew = b_2
+    }
+
+    else {
+      bNew = 0.5 * (b_1 + b_2)
+    }
+
+    const bChange = bNew - this.b
+
+    this.b = bNew
+
+    // Solve for W
+    // TODO: Make this a formula function
+
+    // TODO Give these better names and make them a formula
+    const y1a1a1x1 = x_1.map((v) => {
+      return y_1 * (a_1New - a_1) * v
+    })
+
+    const y2a2a2x2 = this.x_2.map((v) => {
+      return this.y_2 * (a_2New - this.a_2) * v
+    })
+
+    this.w = Formula.vectorSum(this.w, Formula.vectorSum(y1a1a1x1, y2a2a2x2))
+
+    // TODO: Make a formula function for lagrange multipliers
+    const lm1 = y_1 * (a_1New - a_1), lm2 = this.y_2 * (a_2New - this.a_2)
+
+    for (let i = 0; i < this.m; i++) {
+      if (0 < this.alphas[i] && this.alphas[i] < this.c) {
+        this.errors[i] += lm1 * this.kern(x_1, this.x[i]) + lm2
+          * this.kern(this.x_2, this.x[i]) - bChange
+      }
+    }
+
+    this.errors[i_1] = 0
+    this.errors[i_2] = 0
+    this.alphas[i_1] = a_1New
+    this.alphas[i_2] = a_2New
 
     return true
   }
 
   // Returns cached error, otherwise finds SVM output
   cachedError (i) {
-    // KKT condition -- make UTIL function
+    // KKT condition -- make UTIL function -- known as THE BOUNDS CONSTRAINT
     if (0 < this.alphas[i] && this.alphas[i] < this.c) {
       return this.errors[i]
     }
 
     else {
-      return this.output(i) - this.y[i]
+      return (Formula.dotProduct(this.w, this.x[i]) - this.b) - this.y[i]
     }
   }
 
-  // TODO: Make UTIL function
-  output (i) {
-    return Formula.dotProduct(this.w, this.x[i]) - this.b
+  hyperplane () {
+    /*
+    def compute_w(multipliers, X, y):
+    return np.sum(multipliers[i] * y[i] * X[i] for i in range(len(y)))
+    */
+
+    // TODO: Make formula function
+    return this.x.map((x_i, i) => {
+      const multiplier = this.alphas[i] * this.y[i]
+
+      return x_i.map((x) => multiplier * x)
+    })
+
   }
 }

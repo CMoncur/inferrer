@@ -1,7 +1,7 @@
 {
   "APP": "inferrer",
   "SVM_OPTIONS": {
-    "c": 3,
+    "c": 10,
     "iterations": 10000,
     "kernel": "linear",
     "passes": 10,
