@@ -111,6 +111,7 @@ module.exports = class Svm {
 
       // Examine every example
       if (examineAll) {
+        console.log("here first")
         for (let i = 0; i < this.m; i++) {
           changed += this.examine(i)
         }
@@ -118,6 +119,7 @@ module.exports = class Svm {
 
       // First heuristic
       else {
+        console.log("before here")
         this.alphas.forEach((a_i, i) => {
           if (a_i !== 0 && a_i !== this.c) {
             changed += this.examine(i)
@@ -145,23 +147,27 @@ module.exports = class Svm {
 
     const nonZeroNonCAlphas = [], r_2 = this.e_2 * this.y_2
 
-    // console.log("a2: ", this.a_2)
-    // console.log("e2: ", this.e_2)
-    // console.log("r2: ", r_2)
-    // console.log("x2: ", this.x_2)
-    // console.log("y2: ", this.y_2)
+    console.log("Examine step: ")
+    console.log("a2: ", this.a_2)
+    console.log("e2: ", this.e_2)
+    console.log("r2: ", r_2)
+    console.log("x2: ", this.x_2)
+    console.log("y2: ", this.y_2)
 
     if (
       // KKT conditions -- make UTIL function
       (r_2 < -this.tolerance && this.a_2 < this.c) ||
       (r_2 > this.tolerance && this.a_2 > 0)
     ) {
+      console.log("Before this? (examine)")
       // Tally non-zero and non-C alphas
       this.alphas.forEach((a_i, i) => {
         if (a_i > 0 && a_i < this.c) {
           nonZeroNonCAlphas.push(i)
         }
       })
+
+      console.log(nonZeroNonCAlphas)
 
       // Second heuristic, attempt 1
       if (nonZeroNonCAlphas > 1) {
@@ -180,6 +186,8 @@ module.exports = class Svm {
         }
       }
 
+      console.log("We should still be here the first time around (examine)")
+
       // Second heuristic, attempt 2
       let randA_i = Math.floor(Math.random() * nonZeroNonCAlphas.length)
       for (randA_i; randA_i < nonZeroNonCAlphas.length; randA_i++) {
@@ -188,8 +196,11 @@ module.exports = class Svm {
         }
       }
 
+      console.log("And here the first time around (examine)")
+
       // Second heuristic, attempt 3
       let rand_i = Math.floor(Math.random() * this.m)
+      console.log("Rand_i: ", rand_i)
       for (rand_i; rand_i < this.m; rand_i++) {
         if (this.step(rand_i, i_2)) {
           return 1
@@ -197,6 +208,7 @@ module.exports = class Svm {
       }
     }
 
+    console.log("Does this happen (examine)")
     // If step is not taken, return 0 as amount of steps taken
     return 0
   }
@@ -222,9 +234,6 @@ module.exports = class Svm {
       s = y_1 * this.y_2
 
     let a_2New, l, h
-
-    console.log("x1: ", x_1)
-    console.log("x2: ", this.x_2)
 
     if (y_1 === this.y_2) {
       l = Math.max(0, this.a_2 + a_1 - this.c)
@@ -384,6 +393,5 @@ module.exports = class Svm {
 
       return x_i.map((x) => multiplier * x)
     })
-
   }
 }

@@ -1,5 +1,6 @@
 // Dependencies
 const Svm = require("./src/svm")
+const Util = require("./src/util")
 
 const trainingData = {
   input: [
@@ -26,6 +27,4 @@ const XOR = new Svm()
 
 XOR.train(trainingData)
 
-// console.log(trainingData)
-
-XOR.hyperplane()
+console.log(XOR.hyperplane())
