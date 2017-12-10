@@ -27,3 +27,9 @@ const XOR = new Svm()
 XOR.train(trainingData)
 
 console.log(XOR.hyperplane())
+console.log(XOR.offset())
+
+console.log("Classifying SHOULD BE 1: ", XOR.classify([ 8, 7 ]))
+console.log("Classifying SHOULD BE 1: ", XOR.classify([ 7, 10 ]))
+console.log("Classifying SHOULD BE -1: ", XOR.classify([ 1, 3 ]))
+console.log("Classifying SHOULD BE -1: ", XOR.classify([ 2, 5 ]))

@@ -75,6 +75,7 @@ function geometricMargin (v, w, y, b) {
         Geometric Margin expects 'w' to be a list of lists of numbers and
         'y' to be a list of numbers
       `
+
       throw new TypeError(errMsg)
     }
 
@@ -102,11 +103,7 @@ function hypothesis (v, w, b) {
     throw new TypeError("Hypothesis expects two arrays and a number")
   }
 
-  // Prepends b to list v, prepends 1 to list w.
-  v.unshift(b)
-  w.unshift(1)
-
-  return sign(dotProduct(v, w))
+  return sign(dotProduct(v, w) + b)
 }
 
 /* A magnitude of a vector is also known as the vector's norm. Magnitude can
@@ -132,7 +129,8 @@ function magnitude (v) {
 
 /* The sign of number x is 1 if x is greater than 0, -1 if x is less than 0,
 ** and 0 if x is equal to 0. For simplicity, however, we are defaulting
-** 0 values to negatives.
+** 0 values to negatives. This means that if a test data example falls
+** directly upon the hyperplane, it defaults to a negative value.
 */
 // sign :: Number -> Number
 function sign (x) {
@@ -140,7 +138,7 @@ function sign (x) {
     throw new TypeError("Sign expects a number")
   }
 
-  else if (x > 0) {
+  if (x > 0) {
     return 1
   }
 

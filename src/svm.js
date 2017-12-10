@@ -43,10 +43,6 @@ module.exports = class Svm {
     this.errors = [] // Errors
   }
 
-  classify () {
-    return null // TODO
-  }
-
   kern (v, w) {
     // TODO: Implement other kernel functions
     if (this.kernel === "linear") {
@@ -95,6 +91,7 @@ module.exports = class Svm {
     }
 
     // If data is sanitary, include as training data
+    this.trained = false
     this.x = this.x.concat(data.input)
     this.y = this.y.concat(data.classification)
     this.m = this.x.length
@@ -134,6 +131,8 @@ module.exports = class Svm {
         examineAll = true
       }
     }
+
+    this.trained = true
   }
 
   examine (i_2) {
@@ -176,16 +175,14 @@ module.exports = class Svm {
           }
         })
 
-        const isNum = Util.isNum(i_1)
-
-        console.log("do we get here?: ", this.w)
+        // console.log("do we get here?: ", this.w)
         // console.log("i1 meets criteria: ", isNum)
-        console.log("i1: ", i_1)
-        console.log("i2: ", i_2)
+        // console.log("i1: ", i_1)
+        // console.log("i2: ", i_2)
         // console.log("step succeeded: ", second_heur_attempt)
 
         if (Util.isNum(i_1) && this.step(i_1, i_2)) {
-          console.log("w after success: ", this.w)
+          // console.log("w after success: ", this.w)
           return 1
         }
       }
@@ -208,8 +205,10 @@ module.exports = class Svm {
 
       const randFullSequence = Util.randSequence(fullSequence)
 
+      // console.log("random full sequence: ", randFullSequence)
+
       // .some will cease execution once the first truthy value is called back
-      if ([8, 9, 10, 11, 12, 13, 0, 1, 2, 3, 4, 5, 6, 7].some((i) => this.step(i, i_2))) {
+      if (randFullSequence.some((i) => this.step(i, i_2))) {
         // console.log("w when returned: ", this.w)
         return 1
       }
@@ -414,22 +413,45 @@ module.exports = class Svm {
       return this.errors[i]
     }
 
-    else {
-      return (Formula.dotProduct(this.w, this.x[i]) - this.b) - this.y[i]
+    return (Formula.dotProduct(this.w, this.x[i]) - this.b) - this.y[i]
+  }
+
+  classify (x) {
+    if (!this.trained) {
+      const errMsg = `
+        Cannot classify vector input with an SVM that has not yet been trained
+      `
+
+      throw new Error(errMsg)
     }
+
+    // Using a negative for 'b' because we use the w * x - b = 0 variation
+    return Formula.hypothesis(this.w, x, -this.b)
   }
 
   hyperplane () {
-    /*
-    def compute_w(multipliers, X, y):
-    return np.sum(multipliers[i] * y[i] * X[i] for i in range(len(y)))
-    */
+    if (!this.trained) {
+      const errMsg = `
+        The SVM being referenced has not been trained, and therefore contains
+        no hyperplane
+      `
 
-    // TODO: Make formula function
-    return this.x.map((x_i, i) => {
-      const multiplier = this.alphas[i] * this.y[i]
+      throw new Error(errMsg)
+    }
 
-      return x_i.map((x) => multiplier * x)
-    })
+    return this.w
+  }
+
+  offset () {
+    if (!this.trained) {
+      const errMsg = `
+        The SVM being referenced has not been trained, and therefore contains
+        no computed 'b' offset value
+      `
+
+      throw new Error(errMsg)
+    }
+
+    return this.b
   }
 }
