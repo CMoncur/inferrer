@@ -111,7 +111,7 @@ module.exports = class Svm {
 
       // Examine every example
       if (examineAll) {
-        console.log("here first")
+        // TODO: Replace with this.m.forEach and an eslint exception
         for (let i = 0; i < this.m; i++) {
           changed += this.examine(i)
         }
@@ -119,7 +119,6 @@ module.exports = class Svm {
 
       // First heuristic
       else {
-        console.log("before here")
         this.alphas.forEach((a_i, i) => {
           if (a_i !== 0 && a_i !== this.c) {
             changed += this.examine(i)
@@ -147,19 +146,11 @@ module.exports = class Svm {
 
     const nonZeroNonCAlphas = [], r_2 = this.e_2 * this.y_2
 
-    console.log("Examine step: ")
-    console.log("a2: ", this.a_2)
-    console.log("e2: ", this.e_2)
-    console.log("r2: ", r_2)
-    console.log("x2: ", this.x_2)
-    console.log("y2: ", this.y_2)
-
     if (
       // KKT conditions -- make UTIL function
       (r_2 < -this.tolerance && this.a_2 < this.c) ||
       (r_2 > this.tolerance && this.a_2 > 0)
     ) {
-      console.log("Before this? (examine)")
       // Tally non-zero and non-C alphas
       this.alphas.forEach((a_i, i) => {
         if (a_i > 0 && a_i < this.c) {
@@ -167,48 +158,63 @@ module.exports = class Svm {
         }
       })
 
-      console.log(nonZeroNonCAlphas)
-
       // Second heuristic, attempt 1
-      if (nonZeroNonCAlphas > 1) {
+      // console.log("when the fug: ", this.w)
+
+      if (nonZeroNonCAlphas.length > 1) {
+        // console.log("non_bound_idx: ", nonZeroNonCAlphas)
         let i_1, max = 0, stepSize
 
         nonZeroNonCAlphas.forEach((j) => {
           stepSize = Math.abs((this.errors[j] - this.y[j]) - this.e_2)
+          // console.log("step size: ", stepSize)
           if (stepSize > max) {
             max = stepSize
             i_1 = j
+            // console.log("i_1: ", i_1)
+            // console.log("max: ", max)
           }
         })
 
+        const isNum = Util.isNum(i_1)
+
+        console.log("do we get here?: ", this.w)
+        // console.log("i1 meets criteria: ", isNum)
+        console.log("i1: ", i_1)
+        console.log("i2: ", i_2)
+        // console.log("step succeeded: ", second_heur_attempt)
+
         if (Util.isNum(i_1) && this.step(i_1, i_2)) {
+          console.log("w after success: ", this.w)
           return 1
         }
       }
-
-      console.log("We should still be here the first time around (examine)")
 
       // Second heuristic, attempt 2
-      let randA_i = Math.floor(Math.random() * nonZeroNonCAlphas.length)
-      for (randA_i; randA_i < nonZeroNonCAlphas.length; randA_i++) {
-        if (this.step(nonZeroNonCAlphas[randA_i], i_2)) {
-          return 1
-        }
+      const randPartialSequence = Util.randSequence(nonZeroNonCAlphas)
+
+      // .some will cease execution once the first truthy value is called back
+      if (randPartialSequence.some((i) => this.step(i, i_2))) {
+        return 1
       }
 
-      console.log("And here the first time around (examine)")
-
       // Second heuristic, attempt 3
-      let rand_i = Math.floor(Math.random() * this.m)
-      console.log("Rand_i: ", rand_i)
-      for (rand_i; rand_i < this.m; rand_i++) {
-        if (this.step(rand_i, i_2)) {
-          return 1
-        }
+      // eslint-disable-next-line no-unused-vars
+      const fullSequence = Array(this.m).fill(0).reduce((x, xs, idx) => {
+        x.push(idx)
+
+        return x
+      }, [])
+
+      const randFullSequence = Util.randSequence(fullSequence)
+
+      // .some will cease execution once the first truthy value is called back
+      if ([8, 9, 10, 11, 12, 13, 0, 1, 2, 3, 4, 5, 6, 7].some((i) => this.step(i, i_2))) {
+        // console.log("w when returned: ", this.w)
+        return 1
       }
     }
 
-    console.log("Does this happen (examine)")
     // If step is not taken, return 0 as amount of steps taken
     return 0
   }
@@ -220,7 +226,7 @@ module.exports = class Svm {
     }
 
     // If both indices are the same, don't step
-    if (i_1, i_2) {
+    if (i_1 === i_2) {
       return false
     }
 
@@ -233,6 +239,14 @@ module.exports = class Svm {
       e_1 = this.cachedError(i_1),
       s = y_1 * this.y_2
 
+    // console.log("i1: ", i_1)
+    // console.log("i2: ", i_2)
+    // console.log("a1: ", a_1)
+    // console.log("y1: ", y_1)
+    // console.log("X1: ", x_1)
+    // console.log("E1: ", e_1)
+    // console.log("s: ", s)
+
     let a_2New, l, h
 
     if (y_1 === this.y_2) {
@@ -244,6 +258,9 @@ module.exports = class Svm {
       l = Math.max(0, this.a_2 - a_1)
       h = Math.min(this.c, this.c + this.a_2 - a_1)
     }
+
+    // console.log("L: ", l)
+    // console.log("H: ", h)
 
     if (l === h) {
       return false
@@ -258,6 +275,11 @@ module.exports = class Svm {
       // Move this calculation to Formula
       eta = k11 + k22 - 2 * k12
 
+    // console.log("k11: ", k11)
+    // console.log("k12: ", k12)
+    // console.log("k22: ", k22)
+    // console.log("eta: ", eta)
+
     if (eta > 0) {
       // Move this calculation to Formula
       a_2New = this.a_2 + this.y_2 * (e_1 - this.e_2) / eta
@@ -269,6 +291,8 @@ module.exports = class Svm {
       else if (a_2New > h) {
         a_2New = h
       }
+
+      // console.log("a_2New: ", a_2New)
     }
 
     else {
@@ -305,6 +329,8 @@ module.exports = class Svm {
     const changeNegligible = Math.abs(a_2New - this.a_2) < this.tolerance
       * (a_2New + this.a_2 + this.tolerance)
 
+    // console.log("Change Negligible: ", changeNegligible)
+
     if (changeNegligible) {
       return false
     }
@@ -335,6 +361,10 @@ module.exports = class Svm {
 
     const bChange = bNew - this.b
 
+    // console.log("a1_new: ", a_1New)
+    // console.log("new_b: ", bNew)
+    // console.log("delta_b: ", bChange)
+
     this.b = bNew
 
     // Solve for W
@@ -351,9 +381,14 @@ module.exports = class Svm {
 
     this.w = Formula.vectorSum(this.w, Formula.vectorSum(y1a1a1x1, y2a2a2x2))
 
+    // console.log("delta1: ", y1a1a1x1)
+    // console.log("delta2: ", y2a2a2x2)
+    // console.log("new W: ", this.w)
+
     // TODO: Make a formula function for lagrange multipliers
     const lm1 = y_1 * (a_1New - a_1), lm2 = this.y_2 * (a_2New - this.a_2)
 
+    // TODO: Replace with this.m.forEach and an eslint exception
     for (let i = 0; i < this.m; i++) {
       if (0 < this.alphas[i] && this.alphas[i] < this.c) {
         this.errors[i] += lm1 * this.kern(x_1, this.x[i]) + lm2
@@ -365,6 +400,9 @@ module.exports = class Svm {
     this.errors[i_2] = 0
     this.alphas[i_1] = a_1New
     this.alphas[i_2] = a_2New
+
+    // console.log("alpha1: ", this.alphas[i_1])
+    // console.log("alpha2: ", this.alphas[i_2])
 
     return true
   }
