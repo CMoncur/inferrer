@@ -5,6 +5,7 @@ A simple and dependency-free support vector machine library
 - [Installation](#installation)
 - [Using inferrer](#using-inferrer)
   - [Basic Usage Example](#basic-usage-example)
+- [To Do](#to-do)
 - [Contribute](#contribute)
 - [License](#license)
 
@@ -56,6 +57,17 @@ LinearSvm.hyperplane()
 LinearSvm.offset()
 // => -8.202894081803773 (approximation)
 ```
+
+## To Do
+- [x] Basic Functionality
+  - [x] Sequential Minimal Optimization Algorithm
+  - [x] Classify, Hyperplane, and Offset Methods
+  - [x] Defaults Values
+- [ ] Kernel Functions
+  - [x] Linear Kernel
+  - [ ] Polynomial Kernel
+  - [ ] Gaussian Kernel (RBF)
+- [ ] Complete Test Suite
 
 ## Contribute
 I encourage opening issue tickets using the [issue tracker](https://github.com/cmoncur/inferrer/issues). Please open a ticket on the issues page before submitting any pull requests to address said issue! For features and enhancements, please open a detailed, well formatted pull request outlining the necessity and benefit, as well as basic usage examples.
