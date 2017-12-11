@@ -1,5 +1,5 @@
 # inferrer
-A simple and dependency-free support vector machine library
+A simple and dependency-free support vector machine (SVM) library
 
 ### Table of Contents
 - [Installation](#installation)

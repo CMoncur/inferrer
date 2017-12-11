@@ -1,7 +1,7 @@
 {
   "name": "inferrer",
   "version": "0.0.4",
-  "description": "A simple support vector machine library",
+  "description": "A simple and dependency-free support vector machine (SVM) library",
   "main": "index.js",
   "scripts": {
     "test": "ava --verbose"
