@@ -26,8 +26,9 @@ A support vector machine is a machine learning tool used primarily for binary cl
 SMO, or sequential minimal optimization, is an algorithm for solving SVMs devised my John C. Platt. The original research paper is linked in the [sources](#sources) section. __This library utilizes the SMO algorithm for training SVMs.__ The SMO algorithm was chosen because it is less memory intensive and requires less computing power than other SVM algorithms.
 
 ### Sources
-[Sequential Minimal Optimization](https://www.microsoft.com/en-us/research/wp-content/uploads/2016/02/tr-98-14.pdf)
-[Support Vector Machines Succinctly](https://www.svm-tutorial.com/2017/10/support-vector-machines-succinctly-released/)
+[Sequential Minimal Optimization, John C. Platt](https://www.microsoft.com/en-us/research/wp-content/uploads/2016/02/tr-98-14.pdf)
+
+[Support Vector Machines Succinctly, Alexandre Kowalczyk](https://www.svm-tutorial.com/2017/10/support-vector-machines-succinctly-released/)
 
 ## Using inferrer
 First, require the module:
