@@ -268,22 +268,22 @@ module.exports = class Svm {
 
     const a1New = a1 + s * (this.a2 - a2New)
 
-    const b_1 = e1 + y1 * (a1New - a1) * k11 + this.y2
+    const b1 = e1 + y1 * (a1New - a1) * k11 + this.y2
       * (a2New - this.a2) * k12 + this.b
 
-    const b_2 = this.e2 + y1 * (a1New - a1) * k12 + this.y2
+    const b2 = this.e2 + y1 * (a1New - a1) * k12 + this.y2
       * (a2New - this.a2) * k22 + this.b
 
     if (0 < a1 && a1 < this.c) {
-      bNew = b_1
+      bNew = b1
     }
 
     else if (0 < this.a2 && this.a2 < this.c) {
-      bNew = b_2
+      bNew = b2
     }
 
     else {
-      bNew = 0.5 * (b_1 + b_2)
+      bNew = 0.5 * (b1 + b2)
     }
 
     const bChange = bNew - this.b
@@ -322,7 +322,7 @@ module.exports = class Svm {
 
   // Returns cached error, otherwise finds SVM output
   cachedError (i) {
-    // KKT condition -- make UTIL function -- known as THE BOUNDS CONSTRAINT
+    // KKT condition, the bounds constraint
     if (0 < this.alpha[i] && this.alpha[i] < this.c) {
       return this.error[i]
     }
