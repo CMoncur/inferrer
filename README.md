@@ -3,32 +3,18 @@ A simple and dependency-free support vector machine library
 
 ### Table of Contents
 - [Installation](#installation)
+- [Using inferrer](#using-inferrer)
+  - [Basic Usage Example](#basic-usage-example)
+- [To Do](#to-do)
 - [About](#about)
   - [What is a SVM?](#what-is-a-svm)
   - [SMO](#smo)
   - [Sources](#sources)
-- [Using inferrer](#using-inferrer)
-  - [Basic Usage Example](#basic-usage-example)
-- [To Do](#to-do)
 - [Contribute](#contribute)
 - [License](#license)
 
 ## Installation
 `npm install inferrer --save`
-
-## About
-Basic information regarding support vector machines and this library
-
-### What is a SVM?
-A support vector machine is a machine learning tool used primarily for binary classification and regression. It is a "supervised" machine learning technique, meaning the SVM requires training data to base classifications on. In many cases, a SVM is a more accurate classifier than an artificial neural network.
-
-### SMO
-SMO, or sequential minimal optimization, is an algorithm for solving SVMs devised my John C. Platt. The original research paper is linked in the [sources](#sources) section. __This library utilizes the SMO algorithm for training SVMs.__ The SMO algorithm was chosen because it is less memory intensive and requires less computing power than other SVM algorithms.
-
-### Sources
-[Sequential Minimal Optimization, John C. Platt](https://www.microsoft.com/en-us/research/wp-content/uploads/2016/02/tr-98-14.pdf)
-
-[Support Vector Machines Succinctly, Alexandre Kowalczyk](https://www.svm-tutorial.com/2017/10/support-vector-machines-succinctly-released/)
 
 ## Using inferrer
 First, require the module:
@@ -86,6 +72,20 @@ LinearSvm.offset()
   - [ ] Polynomial Kernel
   - [ ] Gaussian Kernel (RBF)
 - [ ] Complete Test Suite
+
+## About
+Basic information regarding support vector machines and this library
+
+### What is a SVM?
+A support vector machine is a machine learning tool used primarily for binary classification and regression. It is a "supervised" machine learning technique, meaning the SVM requires training data to base classifications on. In many cases, a SVM is a more accurate classifier than an artificial neural network.
+
+### SMO
+SMO, or sequential minimal optimization, is an algorithm for solving SVMs devised by John C. Platt. The original research paper is linked in the [sources](#sources) section. __This library utilizes the SMO algorithm for training SVMs.__ The SMO algorithm was chosen because it is less memory intensive and requires less computing power than other SVM algorithms.
+
+### Sources
+[Sequential Minimal Optimization, John C. Platt](https://www.microsoft.com/en-us/research/wp-content/uploads/2016/02/tr-98-14.pdf)
+
+[Support Vector Machines Succinctly, Alexandre Kowalczyk](https://www.svm-tutorial.com/2017/10/support-vector-machines-succinctly-released/)
 
 ## Contribute
 I encourage opening issue tickets using the [issue tracker](https://github.com/cmoncur/inferrer/issues). Please open a ticket on the issues page before submitting any pull requests to address said issue! For features and enhancements, please open a detailed, well formatted pull request outlining the necessity and benefit, as well as basic usage examples.
