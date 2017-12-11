@@ -15,32 +15,13 @@ module.exports = class Svm {
       ? this.c = opts.c
       : this.c = Defaults.SVM_OPTIONS.c
 
-    Util.isNum(opts.iterations) // TODO I don't think this param is necessary
-      ? this.iterations = opts.iterations
-      : this.iterations = Defaults.SVM_OPTIONS.iterations
-
     Util.isKernel(opts.kernel)
       ? this.kernel = opts.kernel
       : this.kernel = Defaults.SVM_OPTIONS.kernel
 
-    Util.isNum(opts.passes) // TODO I don't think this param is necessary
-      ? this.passes = opts.passes
-      : this.passes = Defaults.SVM_OPTIONS.passes
-
     Util.isNum(opts.tolerance)
       ? this.tolerance = opts.tolerance
       : this.tolerance = Defaults.SVM_OPTIONS.tolerance
-
-    // Training Properties
-    this.x = [] // Examples
-    this.y = [] // Labels
-    this.m = 0 // Number of training vectors
-    // TODO: Get rid of N.
-    this.n = 0 // Dimension of vectors
-    this.w = [] // Separating hyperplane
-    this.b = 0 // Offset
-    this.alphas = [] // Alphas
-    this.errors = [] // Errors
   }
 
   kern (v, w) {
@@ -92,13 +73,13 @@ module.exports = class Svm {
 
     // If data is sanitary, include as training data
     this.trained = false
-    this.x = this.x.concat(data.input)
-    this.y = this.y.concat(data.classification)
-    this.m = this.x.length
-    this.n = this.x[0].length
-    this.w = Array(this.n).fill(0)
-    this.alphas = Array(this.m).fill(0) // TODO: get rid of pluralization
-    this.errors = Array(this.m).fill(0) // TODO: get rid of pluralization
+    this.x = data.input // Training examples
+    this.y = data.classification // Training classifications (labels)
+    this.m = this.x.length // Amount of training examples
+    this.w = Array(this.x[0].length).fill(0) // Separating hyperplane
+    this.b = 0 // Offset
+    this.alpha = Array(this.m).fill(0) // Alphas
+    this.error = Array(this.m).fill(0) // Errors
 
     // Find hyperplane and offset using John C. Platt's SMO Algorithm
     let changed = 0, examineAll = true
@@ -108,15 +89,13 @@ module.exports = class Svm {
 
       // Examine every example
       if (examineAll) {
-        // TODO: Replace with this.m.forEach and an eslint exception
-        for (let i = 0; i < this.m; i++) {
-          changed += this.examine(i)
-        }
+        // eslint-disable-next-line no-unused-vars
+        Array(this.m).fill(0).forEach((mi, i) => changed += this.examine(i))
       }
 
       // First heuristic
       else {
-        this.alphas.forEach((a_i, i) => {
+        this.alpha.forEach((a_i, i) => {
           if (a_i !== 0 && a_i !== this.c) {
             changed += this.examine(i)
           }
@@ -140,10 +119,10 @@ module.exports = class Svm {
     // so that we don't have to store them globally in the class.
     this.y_2 = this.y[i_2]
     this.x_2 = this.x[i_2]
-    this.a_2 = this.alphas[i_2]
+    this.a_2 = this.alpha[i_2]
     this.e_2 = this.cachedError(i_2)
 
-    const nonZeroNonCAlphas = [], r_2 = this.e_2 * this.y_2
+    const nonZeroNonCAlpha = [], r_2 = this.e_2 * this.y_2
 
     if (
       // KKT conditions -- make UTIL function
@@ -151,44 +130,32 @@ module.exports = class Svm {
       (r_2 > this.tolerance && this.a_2 > 0)
     ) {
       // Tally non-zero and non-C alphas
-      this.alphas.forEach((a_i, i) => {
+      this.alpha.forEach((a_i, i) => {
         if (a_i > 0 && a_i < this.c) {
-          nonZeroNonCAlphas.push(i)
+          nonZeroNonCAlpha.push(i)
         }
       })
 
       // Second heuristic, attempt 1
-      // console.log("when the fug: ", this.w)
-
-      if (nonZeroNonCAlphas.length > 1) {
-        // console.log("non_bound_idx: ", nonZeroNonCAlphas)
+      if (nonZeroNonCAlpha.length > 1) {
         let i_1, max = 0, stepSize
 
-        nonZeroNonCAlphas.forEach((j) => {
-          stepSize = Math.abs((this.errors[j] - this.y[j]) - this.e_2)
-          // console.log("step size: ", stepSize)
+        nonZeroNonCAlpha.forEach((j) => {
+          stepSize = Math.abs((this.error[j] - this.y[j]) - this.e_2)
+
           if (stepSize > max) {
             max = stepSize
             i_1 = j
-            // console.log("i_1: ", i_1)
-            // console.log("max: ", max)
           }
         })
 
-        // console.log("do we get here?: ", this.w)
-        // console.log("i1 meets criteria: ", isNum)
-        // console.log("i1: ", i_1)
-        // console.log("i2: ", i_2)
-        // console.log("step succeeded: ", second_heur_attempt)
-
         if (Util.isNum(i_1) && this.step(i_1, i_2)) {
-          // console.log("w after success: ", this.w)
           return 1
         }
       }
 
       // Second heuristic, attempt 2
-      const randPartialSequence = Util.randSequence(nonZeroNonCAlphas)
+      const randPartialSequence = Util.randSequence(nonZeroNonCAlpha)
 
       // .some will cease execution once the first truthy value is called back
       if (randPartialSequence.some((i) => this.step(i, i_2))) {
@@ -205,11 +172,8 @@ module.exports = class Svm {
 
       const randFullSequence = Util.randSequence(fullSequence)
 
-      // console.log("random full sequence: ", randFullSequence)
-
       // .some will cease execution once the first truthy value is called back
       if (randFullSequence.some((i) => this.step(i, i_2))) {
-        // console.log("w when returned: ", this.w)
         return 1
       }
     }
@@ -232,19 +196,11 @@ module.exports = class Svm {
     // TODO: Make y_2, a_2, etc... parameters so that they don't have to be
     // stored globally in the class
     const
-      a_1 = this.alphas[i_1],
+      a_1 = this.alpha[i_1],
       y_1 = this.y[i_1],
       x_1 = this.x[i_1],
       e_1 = this.cachedError(i_1),
       s = y_1 * this.y_2
-
-    // console.log("i1: ", i_1)
-    // console.log("i2: ", i_2)
-    // console.log("a1: ", a_1)
-    // console.log("y1: ", y_1)
-    // console.log("X1: ", x_1)
-    // console.log("E1: ", e_1)
-    // console.log("s: ", s)
 
     let a_2New, l, h
 
@@ -257,9 +213,6 @@ module.exports = class Svm {
       l = Math.max(0, this.a_2 - a_1)
       h = Math.min(this.c, this.c + this.a_2 - a_1)
     }
-
-    // console.log("L: ", l)
-    // console.log("H: ", h)
 
     if (l === h) {
       return false
@@ -274,11 +227,6 @@ module.exports = class Svm {
       // Move this calculation to Formula
       eta = k11 + k22 - 2 * k12
 
-    // console.log("k11: ", k11)
-    // console.log("k12: ", k12)
-    // console.log("k22: ", k22)
-    // console.log("eta: ", eta)
-
     if (eta > 0) {
       // Move this calculation to Formula
       a_2New = this.a_2 + this.y_2 * (e_1 - this.e_2) / eta
@@ -290,8 +238,6 @@ module.exports = class Svm {
       else if (a_2New > h) {
         a_2New = h
       }
-
-      // console.log("a_2New: ", a_2New)
     }
 
     else {
@@ -328,8 +274,6 @@ module.exports = class Svm {
     const changeNegligible = Math.abs(a_2New - this.a_2) < this.tolerance
       * (a_2New + this.a_2 + this.tolerance)
 
-    // console.log("Change Negligible: ", changeNegligible)
-
     if (changeNegligible) {
       return false
     }
@@ -360,10 +304,6 @@ module.exports = class Svm {
 
     const bChange = bNew - this.b
 
-    // console.log("a1_new: ", a_1New)
-    // console.log("new_b: ", bNew)
-    // console.log("delta_b: ", bChange)
-
     this.b = bNew
 
     // Solve for W
@@ -380,28 +320,21 @@ module.exports = class Svm {
 
     this.w = Formula.vectorSum(this.w, Formula.vectorSum(y1a1a1x1, y2a2a2x2))
 
-    // console.log("delta1: ", y1a1a1x1)
-    // console.log("delta2: ", y2a2a2x2)
-    // console.log("new W: ", this.w)
-
     // TODO: Make a formula function for lagrange multipliers
     const lm1 = y_1 * (a_1New - a_1), lm2 = this.y_2 * (a_2New - this.a_2)
 
-    // TODO: Replace with this.m.forEach and an eslint exception
-    for (let i = 0; i < this.m; i++) {
-      if (0 < this.alphas[i] && this.alphas[i] < this.c) {
-        this.errors[i] += lm1 * this.kern(x_1, this.x[i]) + lm2
+    // eslint-disable-next-line no-unused-vars
+    Array(this.m).fill(0).forEach((mi, i) => {
+      if (0 < this.alpha[i] && this.alpha[i] < this.c) {
+        this.error[i] += lm1 * this.kern(x_1, this.x[i]) + lm2
           * this.kern(this.x_2, this.x[i]) - bChange
       }
-    }
+    })
 
-    this.errors[i_1] = 0
-    this.errors[i_2] = 0
-    this.alphas[i_1] = a_1New
-    this.alphas[i_2] = a_2New
-
-    // console.log("alpha1: ", this.alphas[i_1])
-    // console.log("alpha2: ", this.alphas[i_2])
+    this.error[i_1] = 0
+    this.error[i_2] = 0
+    this.alpha[i_1] = a_1New
+    this.alpha[i_2] = a_2New
 
     return true
   }
@@ -409,8 +342,8 @@ module.exports = class Svm {
   // Returns cached error, otherwise finds SVM output
   cachedError (i) {
     // KKT condition -- make UTIL function -- known as THE BOUNDS CONSTRAINT
-    if (0 < this.alphas[i] && this.alphas[i] < this.c) {
-      return this.errors[i]
+    if (0 < this.alpha[i] && this.alpha[i] < this.c) {
+      return this.error[i]
     }
 
     return (Formula.dotProduct(this.w, this.x[i]) - this.b) - this.y[i]
