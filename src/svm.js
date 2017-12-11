@@ -22,6 +22,8 @@ module.exports = class Svm {
     Util.isNum(opts.tolerance)
       ? this.tolerance = opts.tolerance
       : this.tolerance = Defaults.SVM_OPTIONS.tolerance
+
+    this.trained = false
   }
 
   kern (v, w) {
@@ -72,7 +74,6 @@ module.exports = class Svm {
     }
 
     // If data is sanitary, include as training data
-    this.trained = false
     this.x = data.input // Training examples
     this.y = data.classification // Training classifications (labels)
     this.m = this.x.length // Amount of training examples
@@ -339,7 +340,7 @@ module.exports = class Svm {
       throw new Error(errMsg)
     }
 
-    // Using a negative for 'b' because we use the w * x - b = 0 variation
+    // Using a negative for 'b' because we use the w * x - b = 0 formula
     return Formula.hypothesis(this.w, x, -this.b)
   }
 
@@ -366,6 +367,7 @@ module.exports = class Svm {
       throw new Error(errMsg)
     }
 
-    return this.b
+    // Using a negative for 'b' because we use the w * x - b = 0 formula
+    return -this.b
   }
 }
