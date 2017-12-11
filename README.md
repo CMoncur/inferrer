@@ -4,7 +4,7 @@ A simple and dependency-free support vector machine library
 ### Table of Contents
 - [Installation](#installation)
 - [About](#about)
-  - [What is a SVM?](#what-is-a-svm?)
+  - [What is a SVM?](#what-is-a-svm)
   - [SMO](#smo)
   - [Sources](#sources)
 - [Using inferrer](#using-inferrer)
