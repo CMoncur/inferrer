@@ -25,15 +25,13 @@ function direction (v) {
     throw new TypeError("Direction expects an array of numbers")
   }
 
+  if (!v.every((x) => Util.isNum(x))) {
+    throw new TypeError("Direction expects an array of numbers")
+  }
+
   const mag = magnitude(v)
 
-  return v.map((x) => {
-    if (!Util.isNum(x)) {
-      throw new TypeError("Direction expects an array of numbers")
-    }
-
-    return x / mag
-  })
+  return v.map((x) => x / mag)
 }
 
 /* Given two equal-sized arrays of numbers, the dot product is defined as the
@@ -171,15 +169,11 @@ function magnitude (v) {
     throw new TypeError("Magnitude expects an array of numbers")
   }
 
-  return Math.sqrt(
-    v.reduce((x, xs) => {
-      if (!Util.isNum(xs)) {
-        throw new TypeError("Magnitude expects an array of numbers")
-      }
+  if (!v.every((x) => Util.isNum(x))) {
+    throw new TypeError("Magnitude expects an array of numbers")
+  }
 
-      return (Math.pow(xs, 2) + x)
-    }, 0)
-  )
+  return Math.sqrt(v.reduce((x, xs) => (Math.pow(xs, 2) + x), 0))
 }
 
 /* The sign of number x is 1 if x is greater than 0, -1 if x is less than 0,
@@ -209,13 +203,11 @@ function vectorDiff (v, w) {
     throw new TypeError("Vector Diff expects two equal-sized arrays")
   }
 
-  return v.map((x, idx) => {
-    if (!Util.isNum(x) || !Util.isNum(w[idx])) {
-      throw new TypeError("Vector Diff expects two arrays of numbers")
-    }
+  if ((!v.every((x) => Util.isNum(x))) || (!w.every((x) => Util.isNum(x)))) {
+    throw new TypeError("Vector Diff expects two arrays of numbers")
+  }
 
-    return x - w[idx]
-  })
+  return v.map((x, idx) => x - w[idx])
 }
 
 /* Two vectors may be added together, resulting in a third vector which is
@@ -227,11 +219,9 @@ function vectorSum (v, w) {
     throw new TypeError("Vector Sum expects two equal-sized arrays")
   }
 
-  return v.map((x, idx) => {
-    if (!Util.isNum(x) || !Util.isNum(w[idx])) {
-      throw new TypeError("Vector Sum expects two arrays of numbers")
-    }
+  if ((!v.every((x) => Util.isNum(x))) || (!w.every((x) => Util.isNum(x)))) {
+    throw new TypeError("Vector Sum expects two arrays of numbers")
+  }
 
-    return x + w[idx]
-  })
+  return v.map((x, idx) => x + w[idx])
 }
