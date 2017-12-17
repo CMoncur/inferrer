@@ -12,7 +12,7 @@ test("Direction correctly calculates cosine of angles", (t) => {
   t.deepEqual(Formula.direction([ 3, 4 ]), [ 0.6, 0.8 ])
 })
 
-test("Direction expects two-item tuple of numbers", (t) => {
+test("Direction expects two equal-sized arrays of numbers", (t) => {
   t.throws(() => Formula.direction(4), TypeError)
   t.throws(() => Formula.direction([ "hi", 4 ]), TypeError)
   t.throws(() => Formula.direction([ 3, "hi" ]), TypeError)
@@ -23,11 +23,45 @@ test("Dot product correctly calculates sum of product of given lists", (t) => {
   t.deepEqual(Formula.dotProduct([ 3, 4 ], [ 5, 6 ]), 39)
 })
 
-test("Dot product expects two-item tuple of numbers", (t) => {
+test("Dot product expects two equal-sized arrays of numbers", (t) => {
+  t.throws(() => Formula.dotProduct("hi", [ 5, 6 ]), TypeError)
+  t.throws(() => Formula.dotProduct([ 3, 4 ], "hi"), TypeError)
   t.throws(() => Formula.dotProduct([ "hi", 4 ], [ 5, 6 ]), TypeError)
   t.throws(() => Formula.dotProduct([ 3, "hi" ], [ 5, 6 ]), TypeError)
   t.throws(() => Formula.dotProduct([ 3, 4 ], [ "hi", 6 ]), TypeError)
   t.throws(() => Formula.dotProduct([ 3, 4 ], [ 5, "hi" ]), TypeError)
+})
+
+// Euclidean Distance
+test("Euclidean distance finds correct distance between two points", (t) => {
+  t.deepEqual(Formula.euclideanDistance([ 3, 4, 5, 6 ], [ 5, 6, 7, 8 ]), 4)
+})
+
+test("Dot product expects two-item tuple of numbers", (t) => {
+  t.throws(() => Formula.euclideanDistance("hi", [ 5, 6 ]), TypeError)
+  t.throws(() => Formula.euclideanDistance([ 3, 4 ], "hi"), TypeError)
+  t.throws(() => Formula.euclideanDistance([ "hi", 4 ], [ 5, 6 ]), TypeError)
+  t.throws(() => Formula.euclideanDistance([ 3, "hi" ], [ 5, 6 ]), TypeError)
+  t.throws(() => Formula.euclideanDistance([ 3, 4 ], [ "hi", 6 ]), TypeError)
+  t.throws(() => Formula.euclideanDistance([ 3, 4 ], [ 5, "hi" ]), TypeError)
+})
+
+// Euclidean Distance Squared
+test("Euclidean distance finds correct distance between two points", (t) => {
+  const eds = Formula.euclideanDistanceSquared
+
+  t.deepEqual(eds([ 3, 4, 5, 6 ], [ 5, 6, 7, 8 ]), 16)
+})
+
+test("Dot product expects two-item tuple of numbers", (t) => {
+  const eds = Formula.euclideanDistanceSquared
+
+  t.throws(() => eds("hi", [ 5, 6 ]), TypeError)
+  t.throws(() => eds([ 3, 4 ], "hi"), TypeError)
+  t.throws(() => eds([ "hi", 4 ], [ 5, 6 ]), TypeError)
+  t.throws(() => eds([ 3, "hi" ], [ 5, 6 ]), TypeError)
+  t.throws(() => eds([ 3, 4 ], [ "hi", 6 ]), TypeError)
+  t.throws(() => eds([ 3, 4 ], [ 5, "hi" ]), TypeError)
 })
 
 // Geometric Margin
@@ -131,7 +165,9 @@ test("Vector Diff correctly calculates new vector", (t) => {
   t.deepEqual(Formula.vectorDiff([ 3, 4 ], [ 5, 6 ]), [ -2, -2 ])
 })
 
-test("Vector Diff expects two-item tuple of numbers", (t) => {
+test("Vector Diff expects two equal-sized arrays of numbers", (t) => {
+  t.throws(() => Formula.vectorDiff("hi", [ 5, 6 ]), TypeError)
+  t.throws(() => Formula.vectorDiff([ 3, 4 ], "hi"), TypeError)
   t.throws(() => Formula.vectorDiff([ "hi", 4 ], [ 5, 6 ]), TypeError)
   t.throws(() => Formula.vectorDiff([ 3, "hi" ], [ 5, 6 ]), TypeError)
   t.throws(() => Formula.vectorDiff([ 3, 4 ], [ "hi", 6 ]), TypeError)
@@ -143,7 +179,9 @@ test("Vector Sum correctly calculates new vector", (t) => {
   t.deepEqual(Formula.vectorSum([ 3, 4 ], [ 5, 6 ]), [ 8, 10 ])
 })
 
-test("Vector Sum expects two-item tuple of numbers", (t) => {
+test("Vector Sum expects two equal-sized arrays of numbers", (t) => {
+  t.throws(() => Formula.vectorSum("hi", [ 5, 6 ]), TypeError)
+  t.throws(() => Formula.vectorSum([ 3, 4 ], "hi"), TypeError)
   t.throws(() => Formula.vectorSum([ "hi", 4 ], [ 5, 6 ]), TypeError)
   t.throws(() => Formula.vectorSum([ 3, "hi" ], [ 5, 6 ]), TypeError)
   t.throws(() => Formula.vectorSum([ 3, 4 ], [ "hi", 6 ]), TypeError)
@@ -157,7 +195,9 @@ test("Linear kernel calculates sum of product of given lists", (t) => {
   t.deepEqual(Kernel.linear([ 3, 4 ], [ 5, 6 ]), 39)
 })
 
-test("Linear kernel expects two-item tuple of numbers", (t) => {
+test("Linear kernel expects two equal-sized arrays of numbers", (t) => {
+  t.throws(() => Kernel.linear("hi", [ 5, 6 ]), TypeError)
+  t.throws(() => Kernel.linear([ 3, 4 ], "hi"), TypeError)
   t.throws(() => Kernel.linear([ "hi", 4 ], [ 5, 6 ]), TypeError)
   t.throws(() => Kernel.linear([ 3, "hi" ], [ 5, 6 ]), TypeError)
   t.throws(() => Kernel.linear([ 3, 4 ], [ "hi", 6 ]), TypeError)
