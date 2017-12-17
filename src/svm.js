@@ -67,9 +67,7 @@ module.exports = class Svm {
       throw new TypeError("All input vectors must be of equal length")
     }
 
-    if(!data.classification.every((x) => {
-      return x === 1 || x === -1
-    })) {
+    if(!data.classification.every((x) => x === 1 || x === -1 )) {
       throw new TypeError("All classifications must be either 1 or -1")
     }
 

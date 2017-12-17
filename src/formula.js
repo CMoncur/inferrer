@@ -1,6 +1,8 @@
 module.exports = {
   direction,
   dotProduct,
+  euclideanDistance,
+  euclideanDistanceSquared,
   geometricMargin,
   hypothesis,
   magnitude,
@@ -20,42 +22,95 @@ const Util = require("./util")
 // direction :: [ Number ] -> [ Number ]
 function direction (v) {
   if (!Util.isArr(v)) {
-    throw new TypeError("Direction expects a list of numbers")
+    throw new TypeError("Direction expects an array of numbers")
   }
 
   const mag = magnitude(v)
 
   return v.map((x) => {
     if (!Util.isNum(x)) {
-      throw new TypeError("Direction expects a list of numbers")
+      throw new TypeError("Direction expects an array of numbers")
     }
 
     return x / mag
   })
 }
 
-/* Given two equal-sized lists of numbers, the dot product is defined as the
-** sum of products of each of the list items.
+/* Given two equal-sized arrays of numbers, the dot product is defined as the
+** sum of products of each of the array items.
 */
 // dotProduct :: [ Number ], [ Number ] -> Number
 function dotProduct (v, w) {
   if (v.length !== w.length) {
-    throw new TypeError("Dot Product expects two equal-sized lists")
+    throw new TypeError("Dot Product expects two equal-sized arrays")
   }
 
   if (!Util.isArr(v) || !Util.isArr(w)) {
     throw new TypeError("Dot Product expects two arrays of numbers")
   }
 
-  const products = v.map((x, idx) => {
-    if (!Util.isNum(x) || !Util.isNum(w[idx])) {
-      throw new TypeError("Dot Product expects two arrays of numbers")
-    }
+  if ((!v.every((x) => Util.isNum(x))) || (!w.every((x) => Util.isNum(x)))) {
+    const errMsg = "Arrays passed to Dot Product must contain only numbers"
 
-    return x * w[idx]
-  })
+    throw new TypeError(errMsg)
+  }
+
+  const products = v.map((x, idx) => x * w[idx])
 
   return products.reduce((x, xs) => x + xs, 0)
+}
+
+/* The Euclidean distance function will return a straight-line distance
+** between two points.
+*/
+// euclideanDistance :: [ Number ] -> [ Number ] -> Number
+function euclideanDistance (v, w) {
+  if (v.length !== w.length) {
+    throw new TypeError("Euclidean Distance expects two equal-sized arrays")
+  }
+
+  if (!Util.isArr(v) || !Util.isArr(w)) {
+    throw new TypeError("Euclidean Distance expects two arrays of numbers")
+  }
+
+  if ((!v.every((x) => Util.isNum(x))) || (!w.every((x) => Util.isNum(x)))) {
+    const errMsg = `
+      Arrays passed to Euclidean Distance must contain only numbers
+    `
+
+    throw new TypeError(errMsg)
+  }
+
+  return Math.sqrt(euclideanDistanceSquared(v, w))
+}
+
+/* The Euclidean distance squared function follows the same logic as the
+** Euclidean distance function, with the exception that we do not square root
+** the result. It is a key component in the Gaussian (RBF) kernel.
+*/
+// euclideanDistanceSquared :: [ Number ] -> [ Number ] -> Number
+function euclideanDistanceSquared (v, w) {
+  if (v.length !== w.length) {
+    const errMsg = "Euclidean Distance Squared expects two equal-sized arrays"
+
+    throw new TypeError(errMsg)
+  }
+
+  if (!Util.isArr(v) || !Util.isArr(w)) {
+    const errMsg = "Euclidean Distance Squared expects two arrays of numbers"
+
+    throw new TypeError(errMsg)
+  }
+
+  if ((!v.every((x) => Util.isNum(x))) || (!w.every((x) => Util.isNum(x)))) {
+    const errMsg = `
+      Arrays passed to Euclidean Distance Squared must contain only numbers
+    `
+
+    throw new TypeError(errMsg)
+  }
+
+  return v.reduce((x, xs, idx) => x + Math.pow((xs - w[idx]), 2), 0)
 }
 
 /* The geometric margin is used to calculate the distance between a given
@@ -66,14 +121,14 @@ function dotProduct (v, w) {
 // geometricMargin :: [ Number ], [ [ Number ] ], [ Number ], Number -> Number
 function geometricMargin (v, w, y, b) {
   if (!Util.isArr(v) || !Util.isArr(w) || !Util.isArr(y) || !Util.isNum(b)) {
-    throw new TypeError("Geometric Margin expects three lists and a number")
+    throw new TypeError("Geometric Margin expects three arrays and a number")
   }
 
   const exampleMargin = (w_i, y_i) => {
     if (!Util.isArr(w_i) || !Util.isNum(y_i)) {
       const errMsg = `
-        Geometric Margin expects 'w' to be a list of lists of numbers and
-        'y' to be a list of numbers
+        Geometric Margin expects 'w' to be an array of arrays of numbers and
+        'y' to be an array of numbers
       `
 
       throw new TypeError(errMsg)
@@ -151,7 +206,7 @@ function sign (x) {
 // vectorDiff :: [ Number ], [ Number ] -> [ Number ]
 function vectorDiff (v, w) {
   if (v.length !== w.length) {
-    throw new TypeError("Vector Diff expects two equal-sized lists")
+    throw new TypeError("Vector Diff expects two equal-sized arrays")
   }
 
   return v.map((x, idx) => {
@@ -169,7 +224,7 @@ function vectorDiff (v, w) {
 // vectorSum :: [ Number ], [ Number ] -> [ Number ]
 function vectorSum (v, w) {
   if (v.length !== w.length) {
-    throw new TypeError("Vector Sum expects two equal-sized lists")
+    throw new TypeError("Vector Sum expects two equal-sized arrays")
   }
 
   return v.map((x, idx) => {
