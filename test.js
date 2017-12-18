@@ -189,8 +189,22 @@ test("Vector Sum expects two equal-sized arrays of numbers", (t) => {
 })
 
 /* KERNEL FUNCTIONS */
+// Gaussian (RBF)
+test("Gaussian kernel is correctly calculated", (t) => {
+  t.deepEqual(Kernel.gaussian([ 3, 4 ], [ 5, 6 ], 0.1), 0.44932896411722156)
+})
+
+test("Gaussian kernel expects two arrays of numbers and a number", (t) => {
+  t.throws(() => Kernel.gaussian("hi", [ 5, 6 ], 0.1), TypeError)
+  t.throws(() => Kernel.gaussian([ 3, 4 ], "hi", 0.1), TypeError)
+  t.throws(() => Kernel.gaussian([ "hi", 4 ], [ 5, 6 ], 0.1), TypeError)
+  t.throws(() => Kernel.gaussian([ 3, "hi" ], [ 5, 6 ], 0.1), TypeError)
+  t.throws(() => Kernel.gaussian([ 3, 4 ], [ "hi", 6 ], 0.1), TypeError)
+  t.throws(() => Kernel.gaussian([ 3, 4 ], [ 5, "hi" ], 0.1), TypeError)
+  t.throws(() => Kernel.gaussian([ 3, 4 ], [ 5, 6 ], "hi"), TypeError)
+})
+
 // Linear
-// Dot Product
 test("Linear kernel calculates sum of product of given lists", (t) => {
   t.deepEqual(Kernel.linear([ 3, 4 ], [ 5, 6 ]), 39)
 })
