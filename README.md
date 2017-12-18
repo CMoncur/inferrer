@@ -93,6 +93,8 @@ SMO, or sequential minimal optimization, is an algorithm for solving SVMs devise
 
 [Support Vector Machines Succinctly, Alexandre Kowalczyk](https://www.svm-tutorial.com/2017/10/support-vector-machines-succinctly-released/)
 
+[Gaussian (Radial Basis Function) Kernel, University of Wisconsin](http://pages.cs.wisc.edu/~matthewb/pages/notes/pdf/svms/RBFKernel.pdf)
+
 ## Contribute
 I encourage opening issue tickets using the [issue tracker](https://github.com/cmoncur/inferrer/issues). Please open a ticket on the issues page before submitting any pull requests to address said issue! For features and enhancements, please open a detailed, well formatted pull request outlining the necessity and benefit, as well as basic usage examples.
 
