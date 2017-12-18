@@ -219,7 +219,7 @@ test("Linear kernel expects two equal-sized arrays of numbers", (t) => {
 })
 
 /* SVM CLASS */
-const XOR = new Svm()
+const XOR = new Svm({ kernel: "gaussian", gamma: 2 })
 
 // Train
 test("Train expects properly sanitized training data", (t) => {
@@ -247,4 +247,18 @@ test("Train expects properly sanitized training data", (t) => {
   t.throws(() => XOR.train(notEqualLength), TypeError)
   t.throws(() => XOR.train(improperVectorSize), TypeError)
   t.throws(() => XOR.train(notProperSign), TypeError)
+})
+
+test("SVM properly classifies XOR test data", (t) => {
+  const data = {
+    input: [ [ 0, 0 ], [ 0, 1 ], [ 1, 0 ], [ 1, 1 ] ],
+    classification: [ -1, 1, 1, -1 ],
+  }
+
+  XOR.train(data)
+
+  t.deepEqual(XOR.classify([ 0, 0 ]), -1)
+  t.deepEqual(XOR.classify([ 0, 1 ]), 1)
+  t.deepEqual(XOR.classify([ 1, 0 ]), 1)
+  t.deepEqual(XOR.classify([ 1, 1 ]), -1)
 })
