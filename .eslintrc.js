@@ -20,7 +20,7 @@ module.exports = {
           "functions": "ignore"
         }
       ],
-      "indent": [ "error", 2 ],
+      "indent": [ "error", 2, { "SwitchCase": 1 } ],
       "linebreak-style": [ "error", "unix" ],
       "max-len": [ "error", 80 ],
       "no-await-in-loop": [ "error" ],

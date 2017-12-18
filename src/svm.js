@@ -15,6 +15,10 @@ module.exports = class Svm {
       ? this.c = opts.c
       : this.c = Defaults.SVM_OPTIONS.c
 
+    Util.isNum(opts.gamma)
+      ? this.gamma = opts.gamma
+      : this.gamma = Defaults.SVM_OPTIONS.gamma
+
     Util.isKernel(opts.kernel)
       ? this.kernel = opts.kernel
       : this.kernel = Defaults.SVM_OPTIONS.kernel
@@ -26,14 +30,18 @@ module.exports = class Svm {
     this.trained = false
   }
 
-  kern (v, w) {
-    // TODO: Implement other kernel functions
-    if (this.kernel === "linear") {
-      return Kernel.linear(v, w)
-    }
+  kern (v, w, gamma) {
+    // TODO: Implement polynomial kernel functions
+    switch (this.kernel) {
+      case "gaussian":
+        return Kernel.gaussian(v, w, gamma)
 
-    // Default to linear kernel function
-    return Kernel.linear(v, w)
+      case "linear":
+        return Kernel.linear(v, w)
+
+      default:
+        return Kernel.linear(v, w) // Default to linear kernel function
+    }
   }
 
   /* alias TrainingData =
@@ -352,6 +360,11 @@ module.exports = class Svm {
       throw new Error(errMsg)
     }
 
+    if (this.kernel === "linear") {
+      return this.w
+    }
+
+    // TODO: Place Lagrange multiplier logic here
     return this.w
   }
 
