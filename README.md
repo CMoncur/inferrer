@@ -51,12 +51,10 @@ XOR.classify([ 0, 0 ])
 
 The hyperplane/offset that results from the training inputs can be accessed using the following methods, respectively:
 ```javascript
-LinearSvm.hyperplane()
-// => [ 1.2003774889309273, 0.8002516592872844 ] (approximation)
+XOR.hyperplane()
 ```
 ```javascript
-LinearSvm.offset()
-// => -8.202894081803773 (approximation)
+XOR.offset()
 ```
 
 ### Options
