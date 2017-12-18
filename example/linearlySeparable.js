@@ -1,4 +1,4 @@
-const Svm = require("../src/svm")
+const Inferrer = require("../src/svm")
 
 const trainingData = {
   input: [
@@ -25,7 +25,7 @@ const trainingData = {
   classification: [ 1, 1, 1, 1, 1, 1, 1, 1, -1, -1, -1, -1, -1, -1, -1, -1 ],
 }
 
-const LinearSvm = new Svm()
+const LinearSvm = new Inferrer()
 
 LinearSvm.train(trainingData)
 
