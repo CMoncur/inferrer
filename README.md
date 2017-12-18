@@ -99,4 +99,4 @@ SMO, or sequential minimal optimization, is an algorithm for solving SVMs devise
 I encourage opening issue tickets using the [issue tracker](https://github.com/cmoncur/inferrer/issues). Please open a ticket on the issues page before submitting any pull requests to address said issue! For features and enhancements, please open a detailed, well formatted pull request outlining the necessity and benefit, as well as basic usage examples.
 
 ## License
-**MIT**
+**MIT** &copy; Cody Moncur
