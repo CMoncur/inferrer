@@ -30,11 +30,11 @@ module.exports = class Svm {
     this.trained = false
   }
 
-  kern (v, w, gamma) {
+  kern (v, w) {
     // TODO: Implement polynomial kernel functions
     switch (this.kernel) {
       case "gaussian":
-        return Kernel.gaussian(v, w, gamma)
+        return Kernel.gaussian(v, w, this.gamma)
 
       case "linear":
         return Kernel.linear(v, w)
@@ -83,7 +83,7 @@ module.exports = class Svm {
     this.x = data.input // Training examples
     this.y = data.classification // Training classifications (labels)
     this.m = this.x.length // Amount of training examples
-    this.w = Array(this.x[0].length).fill(0) // Separating hyperplane
+    this.w = Array(this.x[0].length).fill(0) // Linear hyperplane
     this.b = 0 // Offset
     this.alpha = Array(this.m).fill(0) // Alphas
     this.error = Array(this.m).fill(0) // Errors
@@ -298,19 +298,21 @@ module.exports = class Svm {
     this.b = bNew
 
     // Solve for W
-    const wlm1 = x1.map((v) => {
-      return y1 * (a1New - a1) * v
-    })
+    if (this.kernel === "linear") {
+      const wlm1 = x1.map((v) => {
+        return y1 * (a1New - a1) * v
+      })
 
-    const wlm2 = this.x2.map((v) => {
-      return this.y2 * (a2New - this.a2) * v
-    })
+      const wlm2 = this.x2.map((v) => {
+        return this.y2 * (a2New - this.a2) * v
+      })
 
-    const lm1 = y1 * (a1New - a1), lm2 = this.y2 * (a2New - this.a2)
-
-    this.w = Formula.vectorSum(this.w, Formula.vectorSum(wlm1, wlm2))
+      this.w = Formula.vectorSum(this.w, Formula.vectorSum(wlm1, wlm2))
+    }
 
     // Update error cache
+    const lm1 = y1 * (a1New - a1), lm2 = this.y2 * (a2New - this.a2)
+
     // eslint-disable-next-line no-unused-vars
     Array(this.m).fill(0).forEach((mi, i) => {
       if (0 < this.alpha[i] && this.alpha[i] < this.c) {
@@ -334,7 +336,19 @@ module.exports = class Svm {
       return this.error[i]
     }
 
-    return (Formula.dotProduct(this.w, this.x[i]) - this.b) - this.y[i]
+    if (this.kernel === "linear") {
+      return (Formula.dotProduct(this.w, this.x[i]) - this.b) - this.y[i]
+    }
+
+    return this.nonLinearOutput(i) - this.y[i]
+  }
+
+  nonLinearOutput (i) {
+    const output = this.alpha.map((aj, j) => {
+      return aj * this.y[j] * this.kern(this.x[j], this.x[i])
+    }).reduce((x, xs) => x + xs, 0)
+
+    return output - this.b
   }
 
   classify (x) {
@@ -347,7 +361,15 @@ module.exports = class Svm {
     }
 
     // Using a negative for 'b' because we use the w * x - b = 0 formula
-    return Formula.hypothesis(this.w, x, -this.b)
+    if (this.kernel === "linear") {
+      return Formula.hypothesis(this.w, x, -this.b)
+    }
+
+    const margin = this.alpha.reduce((a, as, i) => {
+      return a + (as * this.y[i] * this.kern(x, this.x[i]))
+    }, -this.b)
+
+    return Formula.sign(margin)
   }
 
   hyperplane () {

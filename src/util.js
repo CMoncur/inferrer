@@ -12,7 +12,8 @@ function isArr (xs) {
 
 // isKernel :: a -> Bool
 function isKernel (x) {
-  if (x === "linear") { // TODO: Update when more kernel functions are added
+  // TODO: Update when polynomial kernel function is added
+  if (x === "gaussian" || x === "linear") {
     return true
   }
 

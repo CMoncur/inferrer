@@ -122,22 +122,11 @@ function geometricMargin (v, w, y, b) {
     throw new TypeError("Geometric Margin expects three arrays and a number")
   }
 
+  if (!y.every((x) => x == 1 || x == -1)) {
+    throw new TypeError("Geometric Margin expects 'y' to be either 1 or -1")
+  }
+
   const exampleMargin = (w_i, y_i) => {
-    if (!Util.isArr(w_i) || !Util.isNum(y_i)) {
-      const errMsg = `
-        Geometric Margin expects 'w' to be an array of arrays of numbers and
-        'y' to be an array of numbers
-      `
-
-      throw new TypeError(errMsg)
-    }
-
-    if (y_i !== 1 && y_i !== 0 && y_i !== -1) {
-      const errMsg = "Geometric Margin expects 'y' to be either 1, 0, or -1"
-
-      throw new TypeError(errMsg)
-    }
-
     return y_i * (dotProduct(direction(v), w_i) + b / magnitude(v))
   }
 
