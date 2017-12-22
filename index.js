@@ -1,4 +1,1 @@
-// Dependencies
-const Svm = require("./src/svm")
-
-module.exports = Svm
+module.exports = require("./src/svm")

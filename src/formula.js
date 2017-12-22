@@ -53,9 +53,9 @@ function dotProduct (v, w) {
     throw new TypeError(errMsg)
   }
 
-  const products = v.map((x, idx) => x * w[idx])
-
-  return products.reduce((x, xs) => x + xs, 0)
+  return v
+    .map((x, idx) => x * w[idx])
+    .reduce((x, xs) => x + xs, 0)
 }
 
 /* The Euclidean distance function will return a straight-line distance
@@ -126,12 +126,12 @@ function geometricMargin (v, w, y, b) {
     throw new TypeError("Geometric Margin expects 'y' to be either 1 or -1")
   }
 
-  const exampleMargin = (w_i, y_i) => {
-    return y_i * (dotProduct(direction(v), w_i) + b / magnitude(v))
+  const exampleMargin = (wi, yi) => {
+    return yi * (dotProduct(direction(v), wi) + b / magnitude(v))
   }
 
   return w
-    .map((w_i, idx) => exampleMargin(w_i, y[idx]))
+    .map((wi, idx) => exampleMargin(wi, y[idx]))
     .reduce((x, xs) => x > xs ? xs : x) // Return smallest value in array
 }
 
