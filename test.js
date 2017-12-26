@@ -265,10 +265,10 @@ test("SVM properly classifies XOR test data", (t) => {
     { input: [ 1, 1 ], classification: -1 }
   ]
 
+  const testData = [ [ 0, 0 ], [ 0, 1 ], [ 1, 0 ], [ 1, 1 ] ]
+  const results = [ -1, 1, 1, -1 ]
+
   XOR.train(data)
 
-  t.deepEqual(XOR.classify([ 0, 0 ]), -1)
-  t.deepEqual(XOR.classify([ 0, 1 ]), 1)
-  t.deepEqual(XOR.classify([ 1, 0 ]), 1)
-  t.deepEqual(XOR.classify([ 1, 1 ]), -1)
+  t.deepEqual(XOR.classifyList(testData), results)
 })
