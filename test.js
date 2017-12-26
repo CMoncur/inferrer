@@ -222,6 +222,10 @@ test("Linear kernel expects two equal-sized arrays of numbers", (t) => {
 const XOR = new Svm({ kernel: "gaussian", gamma: 2 })
 
 // Train
+test("Cannot classify data until SVM is trained", (t) => {
+  t.throws(() => XOR.classify([ 0, 1, 0, 1 ]), Error)
+})
+
 test("Train expects properly sanitized training data", (t) => {
   const notArrays = [
     { input: "hi", classification: -1 },
