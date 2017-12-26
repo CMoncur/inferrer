@@ -21,9 +21,6 @@ const trainingData = [
   { input: [ 1, 7 ], classification: -1 }
 ]
 
-//   classification: [ 1, 1, 1, 1, 1, 1, 1, 1, -1, -1, -1, -1, -1, -1, -1, -1 ],
-// }
-
 const LinearSvm = new Inferrer()
 
 LinearSvm.train(trainingData)
