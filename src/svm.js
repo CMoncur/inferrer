@@ -45,43 +45,31 @@ module.exports = class Svm {
   }
 
   /* alias TrainingData =
-  **   {
-  **     input: [ [ Number ] ],
-  **     classification: [ Number ],
-  **   }
+  **   [ { input: [ Number ], classification: Number } ]
   */
   // train :: TrainingData -> Void
   train (data) {
     // Check data to ensure it is properly formed, expects the following:
-    if (!Util.isArr(data.input) || !Util.isArr(data.classification)) {
+    if (!Util.isArr(data) || !data.every((x) => x instanceof Object)) {
       const errMsg = `
-        SVM requires training data in the form of a list of lists of numbers,
-        and a list of numbers
+        Inferrer requires training data in the form of a list of objects,
+        each containing input and classification keys
       `
 
       throw new TypeError(errMsg)
     }
 
-    if (data.input.length !== data.classification.length) {
-      const errMsg = `
-        The lists of training inputs and their respective training outputs
-        must be equal in length
-      `
-
-      throw new TypeError(errMsg)
-    }
-
-    if(!data.input.every((x) => x.length === data.input[0].length)) {
+    if (!data.every((x) => x.input.length === data[0].input.length)) {
       throw new TypeError("All input vectors must be of equal length")
     }
 
-    if(!data.classification.every((x) => x === 1 || x === -1 )) {
-      throw new TypeError("All classifications must be either 1 or -1")
+    if (!data.every((x) => x.classification === 1 || x.classification === -1)) {
+      throw new TypeError("Every classification must be either 1 or -1")
     }
 
     // If data is sanitary, include as training data
-    this.x = data.input // Training examples
-    this.y = data.classification // Training classifications (labels)
+    this.x = data.map((x) => x.input) // Training examples
+    this.y = data.map((x) => x.classification) // Training labels
     this.m = this.x.length // Amount of training examples
     this.w = Array(this.x[0].length).fill(0) // Linear hyperplane
     this.b = 0 // Offset

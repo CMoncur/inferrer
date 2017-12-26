@@ -1,9 +1,11 @@
 const Inferrer = require("../src/svm")
 
-const trainingData = {
-  input: [ [ 0, 0 ], [ 0, 1 ], [ 1, 0 ], [ 1, 1 ] ],
-  classification: [ -1, 1, 1, -1 ],
-}
+const trainingData = [
+  { input: [ 0, 0 ], classification: -1 },
+  { input: [ 0, 1 ], classification: 1 },
+  { input: [ 1, 0 ], classification: 1 },
+  { input: [ 1, 1 ], classification: -1 }
+]
 
 const XOR = new Inferrer({ kernel: "gaussian", gamma: 2 })
 
