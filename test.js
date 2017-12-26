@@ -223,37 +223,47 @@ const XOR = new Svm({ kernel: "gaussian", gamma: 2 })
 
 // Train
 test("Train expects properly sanitized training data", (t) => {
-  const notArrays = {
-    input: "hi",
-    classification: [ -1, 1, 1, -1 ],
-  }
+  const notArrays = [
+    { input: "hi", classification: -1 },
+    { input: [ 0, 1 ], classification: 1 },
+    { input: [ 1, 0 ], classification: 1 },
+    { input: [ 1, 1 ], classification: -1 }
+  ]
 
-  const notEqualLength = {
-    input: [ [ 0, 0 ], [ 0, 1 ], [ 1, 0 ], [ 1, 1 ] ],
-    classification: [ -1, 1, 1, -1, 1 ],
-  }
+  const improperVectorSize = [
+    { input: [ 0, 0 ], classification: -1 },
+    { input: [ 0, 1, 0 ], classification: 1 },
+    { input: [ 1, 0 ], classification: 1 },
+    { input: [ 1, 1 ], classification: -1 }
+  ]
 
-  const improperVectorSize = {
-    input: [ [ 0, 1, 0 ], [ 0, 1 ], [ 1, 0 ], [ 1, 1 ] ],
-    classification: [ -1, 1, 1, -1 ],
-  }
+  const notProperSign = [
+    { input: [ 0, 0 ], classification: -1 },
+    { input: [ 0, 1 ], classification: 1 },
+    { input: [ 1, 0 ], classification: 1 },
+    { input: [ 1, 1 ], classification: 3 }
+  ]
 
-  const notProperSign = {
-    input: [ [ 0, 0 ], [ 0, 1 ], [ 1, 0 ], [ 1, 1 ] ],
-    classification: [ -1, 1, 3, -1 ],
-  }
+  const sanitaryData = [
+    { input: [ 0, 0 ], classification: -1 },
+    { input: [ 0, 1 ], classification: 1 },
+    { input: [ 1, 0 ], classification: 1 },
+    { input: [ 1, 1 ], classification: -1 }
+  ]
 
   t.throws(() => XOR.train(notArrays), TypeError)
-  t.throws(() => XOR.train(notEqualLength), TypeError)
   t.throws(() => XOR.train(improperVectorSize), TypeError)
   t.throws(() => XOR.train(notProperSign), TypeError)
+  t.deepEqual(XOR.train(sanitaryData), undefined)
 })
 
 test("SVM properly classifies XOR test data", (t) => {
-  const data = {
-    input: [ [ 0, 0 ], [ 0, 1 ], [ 1, 0 ], [ 1, 1 ] ],
-    classification: [ -1, 1, 1, -1 ],
-  }
+  const data = [
+    { input: [ 0, 0 ], classification: -1 },
+    { input: [ 0, 1 ], classification: 1 },
+    { input: [ 1, 0 ], classification: 1 },
+    { input: [ 1, 1 ], classification: -1 }
+  ]
 
   XOR.train(data)
 
