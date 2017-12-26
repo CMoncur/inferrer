@@ -31,10 +31,12 @@ Instantiate a new SVM, and train the SVM using training examples that can be cla
 // The options passed to the SVM class are optional. Details below.
 const XOR = new Inferrer({ kernel: "gaussian", gamma: 2 })
 
-XOR.train({
-  input: [ [ 0, 0 ], [ 0, 1 ], [ 1, 0 ], [ 1, 1 ] ],
-  classification: [ -1, 1, 1, -1 ],
-})
+XOR.train([
+  { input: [ 0, 0 ], classification: -1 },
+  { input: [ 0, 1 ], classification: 1 },
+  { input: [ 1, 0 ], classification: 1 },
+  { input: [ 1, 1 ], classification: -1 }
+])
 ```
 
 It's important to note that all training/testing inputs _must_ be lists of the same length, and every training input _must_ have a classification thereunto pertaining.
