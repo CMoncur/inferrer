@@ -11,11 +11,11 @@ const XOR = new Inferrer({ kernel: "gaussian", gamma: 2 })
 
 XOR.train(trainingData)
 
-console.log("Should be 1: ", XOR.classify([ 0, 1 ]))
-console.log("Should be -1: ", XOR.classify([ 0, 0 ]))
+console.log("Should be [ -1, 1, 1, -1 ]: ")
+console.log(XOR.classifyList([ [ 0, 0 ], [ 0, 1 ], [ 1, 0 ], [ 1, 1 ] ]))
 
 /* Expected Output:
 **
-** Should be 1:  1
-** Should be -1:  -1
+** Should be [ -1, 1, 1, -1 ]:
+** [ -1, 1, 1, -1 ]
 */

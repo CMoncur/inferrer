@@ -360,6 +360,10 @@ module.exports = class Svm {
     return Formula.sign(margin)
   }
 
+  classifyList (xs) {
+    return xs.map((x) => this.classify(x))
+  }
+
   hyperplane () {
     if (!this.trained) {
       const errMsg = `
