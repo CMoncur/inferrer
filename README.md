@@ -41,7 +41,7 @@ XOR.train([
 
 It's important to note that all training/testing inputs _must_ be lists of the same length, and every training input _must_ have a classification thereunto pertaining.
 
-Once the SVM is trained, classifying test inputs is accomplished thusly:
+Once the SVM is trained, classifying test inputs is accomplished thusly, using the `classify` method:
 ```javascript
 XOR.classify([ 0, 1 ])
 // => 1
@@ -49,6 +49,12 @@ XOR.classify([ 0, 1 ])
 ```javascript
 XOR.classify([ 0, 0 ])
 // => -1
+```
+
+The `classifyList` method can be used to classify a list of test values:
+```javascript
+XOR.classifyList([ [ 0, 0 ], [ 0, 1 ], [ 1, 0 ], [ 1, 1 ] ])
+// => [ -1, 1, 1, -1 ]
 ```
 
 The hyperplane/offset that results from the training inputs can be accessed using the following methods, respectively:
@@ -75,6 +81,7 @@ XOR.offset()
   - [x] Sequential Minimal Optimization Algorithm
   - [x] Classify, Hyperplane, and Offset Methods
   - [x] Defaults Values
+  - [x] Classification on a List of Values
 - [ ] Kernel Functions
   - [x] Linear Kernel
   - [x] Gaussian Kernel (RBF)
