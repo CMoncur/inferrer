@@ -1,5 +1,4 @@
-// eslint-disable-next-line no-unused-vars
-module.exports = function (wallaby) {
+module.exports = function () {
   return {
     env: { type: "node" },
     files: [ "src/**/*.js", "env/defaults.json" ],
