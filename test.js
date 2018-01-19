@@ -6,6 +6,9 @@ const Formula = require("./src/formula")
 const Kernel = require("./src/kernel")
 const Svm = require("./src/svm")
 
+// Datasets
+const IrisFlower = require("./example/datasets/iris")
+
 /* UTILITIES */
 // Direction
 test("Direction correctly calculates cosine of angles", (t) => {
@@ -330,19 +333,25 @@ test("SVM properly classifies linear test data (Linear kernel)", (t) => {
 })
 
 // General SVM Class Tests
-const General = new Svm({
-  c: ,
+test("SVM assigns default options if no options are given", (t) => {
+  const Default = new Svm()
+
+  t.deepEqual(Default.c, 3)
+  t.deepEqual(Default.gamma, 0.1)
+  t.deepEqual(Default.kernel, "linear")
+  t.deepEqual(Default.tolerance, 0.001)
 })
 
-test("SVM defaults to linear kernel if improper kernel is given", (t) => {
-  const data = [
-    { input: [ 5, 8 ], classification: 1 },
-    { input: [ 7, 4 ], classification: 1 },
-    { input: [ 3, 1 ], classification: -1 },
-    { input: [ 1, 7 ], classification: -1 }
-  ]
+test("SVM assigns custom options if options are given", (t) => {
+  const Custom = new Svm({
+    c: 10,
+    gamma: 2,
+    kernel: "gaussian",
+    tolerance: 0.0001,
+  })
 
-  General.train(data)
-
-  t.deepEqual(General.kernel, "linear")
+  t.deepEqual(Custom.c, 10)
+  t.deepEqual(Custom.gamma, 2)
+  t.deepEqual(Custom.kernel, "gaussian")
+  t.deepEqual(Custom.tolerance, 0.0001)
 })

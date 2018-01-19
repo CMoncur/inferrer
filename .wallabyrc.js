@@ -1,7 +1,11 @@
 module.exports = function () {
   return {
     env: { type: "node" },
-    files: [ "src/**/*.js", "env/defaults.json" ],
+    files: [
+      "env/defaults.json",
+      "example/datasets/*.js",
+      "src/**/*.js"
+    ],
     tests: [ "test.js" ],
     testFramework: "ava",
   }
