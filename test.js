@@ -23,7 +23,11 @@ test("Dot product correctly calculates sum of product of given lists", (t) => {
   t.deepEqual(Formula.dotProduct([ 3, 4 ], [ 5, 6 ]), 39)
 })
 
-test("Dot product expects two equal-sized arrays of numbers", (t) => {
+test("Dot product expects two equal-sized arrays", (t) => {
+  t.throws(() => Formula.dotProduct([ 2, 3, 4 ], [ 5, 6 ]), TypeError)
+})
+
+test("Dot product expects two arrays of numbers", (t) => {
   t.throws(() => Formula.dotProduct("hi", [ 5, 6 ]), TypeError)
   t.throws(() => Formula.dotProduct([ 3, 4 ], "hi"), TypeError)
   t.throws(() => Formula.dotProduct([ "hi", 4 ], [ 5, 6 ]), TypeError)
@@ -37,7 +41,11 @@ test("Euclidean distance finds correct distance between two points", (t) => {
   t.deepEqual(Formula.euclideanDistance([ 3, 4, 5, 6 ], [ 5, 6, 7, 8 ]), 4)
 })
 
-test("Dot product expects two-item tuple of numbers", (t) => {
+test("Dot product expects two equal-sized arrays", (t) => {
+  t.throws(() => Formula.euclideanDistance([ 2, 3, 4 ], [ 5, 6 ]), TypeError)
+})
+
+test("Euclidean distance expects two-item tuple of numbers", (t) => {
   t.throws(() => Formula.euclideanDistance("hi", [ 5, 6 ]), TypeError)
   t.throws(() => Formula.euclideanDistance([ 3, 4 ], "hi"), TypeError)
   t.throws(() => Formula.euclideanDistance([ "hi", 4 ], [ 5, 6 ]), TypeError)
@@ -47,15 +55,17 @@ test("Dot product expects two-item tuple of numbers", (t) => {
 })
 
 // Euclidean Distance Squared
-test("Euclidean distance finds correct distance between two points", (t) => {
-  const eds = Formula.euclideanDistanceSquared
+const eds = Formula.euclideanDistanceSquared
 
+test("Euclidean distance squared finds distance between two points", (t) => {
   t.deepEqual(eds([ 3, 4, 5, 6 ], [ 5, 6, 7, 8 ]), 16)
 })
 
-test("Dot product expects two-item tuple of numbers", (t) => {
-  const eds = Formula.euclideanDistanceSquared
+test("Euclidean distance squared expects two equal-sized arrays", (t) => {
+  t.throws(() => eds([ 2, 3, 4 ], [ 5, 6 ]), TypeError)
+})
 
+test("Euclidean distance squared  expects two-item tuple of numbers", (t) => {
   t.throws(() => eds("hi", [ 5, 6 ]), TypeError)
   t.throws(() => eds([ 3, 4 ], "hi"), TypeError)
   t.throws(() => eds([ "hi", 4 ], [ 5, 6 ]), TypeError)
@@ -261,7 +271,7 @@ test("Train expects properly sanitized training data", (t) => {
   t.deepEqual(XOR.train(sanitaryData), undefined)
 })
 
-test("SVM properly classifies XOR test data", (t) => {
+test("SVM properly classifies XOR test data (Gaussian kernel)", (t) => {
   const data = [
     { input: [ 0, 0 ], classification: -1 },
     { input: [ 0, 1 ], classification: 1 },
@@ -275,4 +285,40 @@ test("SVM properly classifies XOR test data", (t) => {
   XOR.train(data)
 
   t.deepEqual(XOR.classifyList(testData), results)
+})
+
+const LinearlySeparable = new Svm()
+
+test("SVM defaults to linear kernel if none is given", (t) => {
+  t.deepEqual(LinearlySeparable.kernel, "linear")
+})
+
+test("SVM properly classifies linear test data (Linear kernel)", (t) => {
+  const data = [
+    // "1" values
+    { input: [ 4, 6 ], classification: 1 },
+    { input: [ 5, 4 ], classification: 1 },
+    { input: [ 8, 2 ], classification: 1 },
+    { input: [ 2, 9 ], classification: 1 },
+    { input: [ 6, 6 ], classification: 1 },
+    { input: [ 3, 7 ], classification: 1 },
+    { input: [ 5, 8 ], classification: 1 },
+    { input: [ 7, 4 ], classification: 1 },
+    // "-1" values
+    { input: [ 4, 2 ], classification: -1 },
+    { input: [ 6, 0 ], classification: -1 },
+    { input: [ 2, 4 ], classification: -1 },
+    { input: [ 2, 6 ], classification: -1 },
+    { input: [ 3, 3 ], classification: -1 },
+    { input: [ 2, 3 ], classification: -1 },
+    { input: [ 3, 1 ], classification: -1 },
+    { input: [ 1, 7 ], classification: -1 }
+  ]
+
+  const testData = [ [ 7, 3 ], [ 5, 5 ], [ 4, 1 ], [ 3, 4 ] ]
+  const results = [ 1, 1, -1, -1 ]
+
+  LinearlySeparable.train(data)
+
+  t.deepEqual(LinearlySeparable.classifyList(testData), results)
 })
