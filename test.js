@@ -175,7 +175,11 @@ test("Vector Diff correctly calculates new vector", (t) => {
   t.deepEqual(Formula.vectorDiff([ 3, 4 ], [ 5, 6 ]), [ -2, -2 ])
 })
 
-test("Vector Diff expects two equal-sized arrays of numbers", (t) => {
+test("Vector Diff expects two equal-sized arrays", (t) => {
+  t.throws(() => Formula.vectorDiff([ 2, 3, 4 ], [ 5, 6 ]), TypeError)
+})
+
+test("Vector Diff expects two arrays of numbers", (t) => {
   t.throws(() => Formula.vectorDiff("hi", [ 5, 6 ]), TypeError)
   t.throws(() => Formula.vectorDiff([ 3, 4 ], "hi"), TypeError)
   t.throws(() => Formula.vectorDiff([ "hi", 4 ], [ 5, 6 ]), TypeError)
@@ -189,7 +193,11 @@ test("Vector Sum correctly calculates new vector", (t) => {
   t.deepEqual(Formula.vectorSum([ 3, 4 ], [ 5, 6 ]), [ 8, 10 ])
 })
 
-test("Vector Sum expects two equal-sized arrays of numbers", (t) => {
+test("Vector Sum expects two equal-sized arrays", (t) => {
+  t.throws(() => Formula.vectorSum([ 2, 3, 4 ], [ 5, 6 ]), TypeError)
+})
+
+test("Vector Sum expects two arrays of numbers", (t) => {
   t.throws(() => Formula.vectorSum("hi", [ 5, 6 ]), TypeError)
   t.throws(() => Formula.vectorSum([ 3, 4 ], "hi"), TypeError)
   t.throws(() => Formula.vectorSum([ "hi", 4 ], [ 5, 6 ]), TypeError)
@@ -271,6 +279,7 @@ test("Train expects properly sanitized training data", (t) => {
   t.deepEqual(XOR.train(sanitaryData), undefined)
 })
 
+// Gaussian Kernel
 test("SVM properly classifies XOR test data (Gaussian kernel)", (t) => {
   const data = [
     { input: [ 0, 0 ], classification: -1 },
@@ -287,11 +296,8 @@ test("SVM properly classifies XOR test data (Gaussian kernel)", (t) => {
   t.deepEqual(XOR.classifyList(testData), results)
 })
 
+// Linear Kernel
 const LinearlySeparable = new Svm()
-
-test("SVM defaults to linear kernel if none is given", (t) => {
-  t.deepEqual(LinearlySeparable.kernel, "linear")
-})
 
 test("SVM properly classifies linear test data (Linear kernel)", (t) => {
   const data = [
@@ -321,4 +327,22 @@ test("SVM properly classifies linear test data (Linear kernel)", (t) => {
   LinearlySeparable.train(data)
 
   t.deepEqual(LinearlySeparable.classifyList(testData), results)
+})
+
+// General SVM Class Tests
+const General = new Svm({
+  c: ,
+})
+
+test("SVM defaults to linear kernel if improper kernel is given", (t) => {
+  const data = [
+    { input: [ 5, 8 ], classification: 1 },
+    { input: [ 7, 4 ], classification: 1 },
+    { input: [ 3, 1 ], classification: -1 },
+    { input: [ 1, 7 ], classification: -1 }
+  ]
+
+  General.train(data)
+
+  t.deepEqual(General.kernel, "linear")
 })
