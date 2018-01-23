@@ -28,6 +28,7 @@
   "homepage": "https://github.com/CMoncur/inferrer#readme",
   "devDependencies": {
     "ava": "^0.23.0",
+    "coveralls": "^3.0.0",
     "eslint": "^4.12.0"
   }
 }
