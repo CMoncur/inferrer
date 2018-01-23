@@ -378,8 +378,8 @@ module.exports = class Svm {
       return this.w
     }
 
-    // TODO: Place Lagrange multiplier logic here
-    return this.w
+    // If linear kernel isn't being used, return Lagrange multipliers
+    return this.alpha
   }
 
   offset () {

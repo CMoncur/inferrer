@@ -4,7 +4,7 @@ const test = require("ava")
 // Internal Dependencies
 const Formula = require("./src/formula")
 const Kernel = require("./src/kernel")
-const Svm = require("./src/svm")
+const Inferrer = require("./src/svm")
 
 // Datasets
 const IrisFlower = require("./example/datasets/iris")
@@ -240,7 +240,7 @@ test("Linear kernel expects two equal-sized arrays of numbers", (t) => {
 })
 
 /* SVM CLASS */
-const XOR = new Svm({ kernel: "gaussian", gamma: 2 })
+const XOR = new Inferrer({ kernel: "gaussian", gamma: 2 })
 
 // Train
 test("Cannot classify data until SVM is trained", (t) => {
@@ -282,6 +282,12 @@ test("Train expects properly sanitized training data", (t) => {
   t.deepEqual(XOR.train(sanitaryData), undefined)
 })
 
+test("Train properly trains higher dimensional datasets", (t) => {
+  const Iris = new Inferrer()
+
+  t.deepEqual(Iris.train(IrisFlower.training), undefined)
+})
+
 // Gaussian Kernel
 test("SVM properly classifies XOR test data (Gaussian kernel)", (t) => {
   const data = [
@@ -300,9 +306,9 @@ test("SVM properly classifies XOR test data (Gaussian kernel)", (t) => {
 })
 
 // Linear Kernel
-const LinearlySeparable = new Svm()
-
 test("SVM properly classifies linear test data (Linear kernel)", (t) => {
+  const LinearlySeparable = new Inferrer()
+
   const data = [
     // "1" values
     { input: [ 4, 6 ], classification: 1 },
@@ -334,7 +340,7 @@ test("SVM properly classifies linear test data (Linear kernel)", (t) => {
 
 // General SVM Class Tests
 test("SVM assigns default options if no options are given", (t) => {
-  const Default = new Svm()
+  const Default = new Inferrer()
 
   t.deepEqual(Default.c, 3)
   t.deepEqual(Default.gamma, 0.1)
@@ -343,7 +349,7 @@ test("SVM assigns default options if no options are given", (t) => {
 })
 
 test("SVM assigns custom options if options are given", (t) => {
-  const Custom = new Svm({
+  const Custom = new Inferrer({
     c: 10,
     gamma: 2,
     kernel: "gaussian",

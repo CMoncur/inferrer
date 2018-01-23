@@ -21,6 +21,7 @@ module.exports = {
     [ 4.4, 2.9, 1.4, 0.2 ],
     [ 4.9, 3.1, 1.5, 0.1 ]
   ],
+
   testingNegative: [
     [ 7, 3.2, 4.7, 1.4 ],
     [ 6.4, 3.2, 4.5, 1.5 ],
@@ -33,6 +34,7 @@ module.exports = {
     [ 6.6, 2.9, 4.6, 1.3 ],
     [ 5.2, 2.7, 3.9, 1.4 ]
   ],
+
   training: [
     { input: [ 5.1, 3.5, 1.4, 0.2 ], classification: 1 },
     { input: [ 4.9, 3, 1.4, 0.2 ], classification: 1 },

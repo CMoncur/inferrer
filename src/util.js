@@ -35,7 +35,7 @@ function isNum (x) {
 ** => [ 10, 12, 14, 16, 18, 20, 2, 4, 6, 8 ]
 */
 // randSequence :: [ a ] -> [ a ]
-// TODO: Write unit tests for this
+// TODO: Type checking/unit tests for this
 function randSequence(ls) {
   const
     randPoint = Math.floor(Math.random() * ls.length),
