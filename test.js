@@ -3,8 +3,8 @@ const test = require("ava")
 
 // Internal Dependencies
 const Formula = require("./src/formula")
-const Kernel = require("./src/kernel")
 const Inferrer = require("./src/svm")
+const Kernel = require("./src/kernel")
 
 // Datasets
 const IrisFlower = require("./example/datasets/iris")
@@ -338,4 +338,18 @@ test("SVM assigns custom options if options are given", (t) => {
   t.deepEqual(Custom.gamma, 2)
   t.deepEqual(Custom.kernel, "gaussian")
   t.deepEqual(Custom.tolerance, 0.0001)
+})
+
+test("Hyperplane method throws an error if SVM is not trained", (t) => {
+  const Untrained = new Inferrer()
+
+  t.throws(() => Untrained.hyperplane(), Error)
+})
+
+test("Hyperplane method returns W value if using linear kernel", (t) => {
+  const LinearSvm = new Inferrer()
+
+  LinearSvm.train(Linear.training)
+
+  t.truthy(LinearSvm.hyperplane() === LinearSvm.w)
 })
