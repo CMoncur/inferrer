@@ -8,6 +8,7 @@ const Inferrer = require("./src/svm")
 
 // Datasets
 const IrisFlower = require("./example/datasets/iris")
+const Linear = require("./example/datasets/linear")
 
 /* UTILITIES */
 // Direction
@@ -307,35 +308,12 @@ test("SVM properly classifies XOR test data (Gaussian kernel)", (t) => {
 
 // Linear Kernel
 test("SVM properly classifies linear test data (Linear kernel)", (t) => {
-  const LinearlySeparable = new Inferrer()
+  const LinearSvm = new Inferrer()
 
-  const data = [
-    // "1" values
-    { input: [ 4, 6 ], classification: 1 },
-    { input: [ 5, 4 ], classification: 1 },
-    { input: [ 8, 2 ], classification: 1 },
-    { input: [ 2, 9 ], classification: 1 },
-    { input: [ 6, 6 ], classification: 1 },
-    { input: [ 3, 7 ], classification: 1 },
-    { input: [ 5, 8 ], classification: 1 },
-    { input: [ 7, 4 ], classification: 1 },
-    // "-1" values
-    { input: [ 4, 2 ], classification: -1 },
-    { input: [ 6, 0 ], classification: -1 },
-    { input: [ 2, 4 ], classification: -1 },
-    { input: [ 2, 6 ], classification: -1 },
-    { input: [ 3, 3 ], classification: -1 },
-    { input: [ 2, 3 ], classification: -1 },
-    { input: [ 3, 1 ], classification: -1 },
-    { input: [ 1, 7 ], classification: -1 }
-  ]
+  LinearSvm.train(Linear.training)
 
-  const testData = [ [ 7, 3 ], [ 5, 5 ], [ 4, 1 ], [ 3, 4 ] ]
-  const results = [ 1, 1, -1, -1 ]
-
-  LinearlySeparable.train(data)
-
-  t.deepEqual(LinearlySeparable.classifyList(testData), results)
+  t.deepEqual(LinearSvm.classifyList(Linear.testingPositive), [ 1, 1 ])
+  t.deepEqual(LinearSvm.classifyList(Linear.testingNegative), [ -1, -1 ])
 })
 
 // General SVM Class Tests
