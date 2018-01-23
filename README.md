@@ -3,6 +3,7 @@ A simple and dependency-free support vector machine (SVM) library
 
 [![Build Status](https://travis-ci.org/CMoncur/inferrer.svg?branch=master)](https://travis-ci.org/CMoncur/inferrer)
 [![Coverage Status](https://coveralls.io/repos/github/CMoncur/inferrer/badge.svg?branch=master)](https://coveralls.io/github/CMoncur/inferrer?branch=master)
+[![dependencies Status](https://david-dm.org/cmoncur/inferrer/status.svg)](https://david-dm.org/cmoncur/inferrer)
 
 ### Table of Contents
 - [Installation](#installation)
