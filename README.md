@@ -1,6 +1,8 @@
 # inferrer
 A simple and dependency-free support vector machine (SVM) library
 
+[![Build Status](https://travis-ci.org/CMoncur/inferrer.svg?branch=master)](https://travis-ci.org/CMoncur/inferrer)
+
 ### Table of Contents
 - [Installation](#installation)
 - [Using inferrer](#using-inferrer)
