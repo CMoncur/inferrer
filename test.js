@@ -325,10 +325,11 @@ test("SVM assigns custom options if options are given", (t) => {
   t.deepEqual(Custom.tolerance, 0.0001)
 })
 
-test("Hyperplane method throws an error if SVM is not trained", (t) => {
+test("Hyperplane and Offset methods require SVM to be trained", (t) => {
   const Untrained = new Inferrer()
 
   t.throws(() => Untrained.hyperplane(), Error)
+  t.throws(() => Untrained.offset(), Error)
 })
 
 test("Hyperplane method returns W value if using linear kernel", (t) => {
@@ -345,4 +346,15 @@ test("Hyperplane method returns Lagrange multipliers if not linear", (t) => {
   GaussianSvm.train(Xor.training)
 
   t.deepEqual(GaussianSvm.hyperplane(), GaussianSvm.alpha)
+})
+
+test("Offset method returns negative B value if SVM is trained", (t) => {
+  const LinearSvm = new Inferrer()
+  const GaussianSvm = new Inferrer({ kernel: "gaussian" })
+
+  LinearSvm.train(Linear.training)
+  GaussianSvm.train(Xor.training)
+
+  t.deepEqual(LinearSvm.offset(), -LinearSvm.b)
+  t.deepEqual(GaussianSvm.offset(), -GaussianSvm.b)
 })
