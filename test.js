@@ -9,6 +9,7 @@ const Kernel = require("./src/kernel")
 // Datasets
 const IrisFlower = require("./example/datasets/iris")
 const Linear = require("./example/datasets/linear")
+const Xor = require("./example/datasets/xor")
 
 /* UTILITIES */
 // Direction
@@ -270,17 +271,10 @@ test("Train expects properly sanitized training data", (t) => {
     { input: [ 1, 1 ], classification: 3 }
   ]
 
-  const sanitaryData = [
-    { input: [ 0, 0 ], classification: -1 },
-    { input: [ 0, 1 ], classification: 1 },
-    { input: [ 1, 0 ], classification: 1 },
-    { input: [ 1, 1 ], classification: -1 }
-  ]
-
   t.throws(() => XOR.train(notArrays), TypeError)
   t.throws(() => XOR.train(improperVectorSize), TypeError)
   t.throws(() => XOR.train(notProperSign), TypeError)
-  t.deepEqual(XOR.train(sanitaryData), undefined)
+  t.deepEqual(XOR.train(Xor.training), undefined)
 })
 
 test("Train properly trains higher dimensional datasets", (t) => {
@@ -291,19 +285,10 @@ test("Train properly trains higher dimensional datasets", (t) => {
 
 // Gaussian Kernel
 test("SVM properly classifies XOR test data (Gaussian kernel)", (t) => {
-  const data = [
-    { input: [ 0, 0 ], classification: -1 },
-    { input: [ 0, 1 ], classification: 1 },
-    { input: [ 1, 0 ], classification: 1 },
-    { input: [ 1, 1 ], classification: -1 }
-  ]
+  XOR.train(Xor.training)
 
-  const testData = [ [ 0, 0 ], [ 0, 1 ], [ 1, 0 ], [ 1, 1 ] ]
-  const results = [ -1, 1, 1, -1 ]
-
-  XOR.train(data)
-
-  t.deepEqual(XOR.classifyList(testData), results)
+  t.deepEqual(XOR.classifyList(Xor.testingPositive), [ 1, 1 ])
+  t.deepEqual(XOR.classifyList(Xor.testingNegative), [ -1, -1 ])
 })
 
 // Linear Kernel
@@ -351,5 +336,13 @@ test("Hyperplane method returns W value if using linear kernel", (t) => {
 
   LinearSvm.train(Linear.training)
 
-  t.truthy(LinearSvm.hyperplane() === LinearSvm.w)
+  t.deepEqual(LinearSvm.hyperplane(), LinearSvm.w)
+})
+
+test("Hyperplane method returns Lagrange multipliers if not linear", (t) => {
+  const GaussianSvm = new Inferrer({ kernel: "gaussian" })
+
+  GaussianSvm.train(Xor.training)
+
+  t.deepEqual(GaussianSvm.hyperplane(), GaussianSvm.alpha)
 })
